@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="36de209585b84b6587159da71718fca6" Name="Diagram1">
+        <EntityTypeShape EntityType="SalesProjectNetDBModel.OrderItem" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="SalesProjectNetDBModel.Order" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="SalesProjectNetDBModel.Product" Width="1.5" PointX="3" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SalesProjectNetDBModel.User" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
+        <AssociationConnector Association="SalesProjectNetDBModel.FK__OrderItem__order__44FF419A" ManuallyRouted="false" />
+        <AssociationConnector Association="SalesProjectNetDBModel.FK__OrderItems__SKU__45F365D3" ManuallyRouted="false" />
+        <AssociationConnector Association="SalesProjectNetDBModel.FK__Orders__userID__4222D4EF" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
