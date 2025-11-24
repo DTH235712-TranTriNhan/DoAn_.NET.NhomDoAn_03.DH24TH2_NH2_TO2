@@ -94,13 +94,22 @@
     <Compile Include="Forms\POS\POSMainForm.Designer.cs">
       <DependentUpon>POSMainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\Order.cs">
+    <Compile Include="Models\category.cs">
       <DependentUpon>SalesModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\OrderItem.cs">
+    <Compile Include="Models\order.cs">
       <DependentUpon>SalesModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Product.cs">
+    <Compile Include="Models\order_details.cs">
+      <DependentUpon>SalesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\product.cs">
+      <DependentUpon>SalesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\shipping_info.cs">
+      <DependentUpon>SalesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\user.cs">
       <DependentUpon>SalesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -119,9 +128,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SalesModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\User.cs">
-      <DependentUpon>SalesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Repositories\ProductRepository.cs">
       <SubType>Form</SubType>

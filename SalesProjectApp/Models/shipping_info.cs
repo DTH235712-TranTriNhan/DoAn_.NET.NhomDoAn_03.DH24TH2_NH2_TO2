@@ -12,15 +12,15 @@ namespace SalesProjectApp.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class OrderItem
+    public partial class shipping_info
     {
-        public int itemID { get; set; }
-        public int orderID { get; set; }
-        public string SKU { get; set; }
-        public int quantity { get; set; }
-        public decimal unitPrice { get; set; }
+        public int id { get; set; }
+        public Nullable<int> order_id { get; set; }
+        public string recipient_name { get; set; }
+        public string phone_number { get; set; }
+        public string address { get; set; }
+        public string notes { get; set; }
     
-        public virtual Order Order { get; set; }
-        public virtual Product Product { get; set; }
+        public virtual order order { get; set; }
     }
 }

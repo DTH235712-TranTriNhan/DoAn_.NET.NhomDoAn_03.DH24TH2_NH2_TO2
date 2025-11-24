@@ -12,23 +12,24 @@ namespace SalesProjectApp.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class User
+    public partial class user
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public User()
+        public user()
         {
-            this.Orders = new HashSet<Order>();
+            this.orders = new HashSet<order>();
         }
     
-        public string userID { get; set; }
-        public string userName { get; set; }
+        public int id { get; set; }
+        public string username { get; set; }
         public string password { get; set; }
-        public string fullName { get; set; }
-        public string phone { get; set; }
-        public string address { get; set; }
-        public string userRole { get; set; }
+        public string email { get; set; }
+        public string phone_number { get; set; }
+        public string full_name { get; set; }
+        public string role { get; set; }
+        public Nullable<System.DateTime> created_at { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<order> orders { get; set; }
     }
 }

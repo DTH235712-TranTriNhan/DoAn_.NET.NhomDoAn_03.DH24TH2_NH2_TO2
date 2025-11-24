@@ -25,9 +25,11 @@ namespace SalesProjectApp.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<OrderItem> OrderItems { get; set; }
-        public virtual DbSet<Order> Orders { get; set; }
-        public virtual DbSet<Product> Products { get; set; }
-        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<category> categories { get; set; }
+        public virtual DbSet<order_details> order_details { get; set; }
+        public virtual DbSet<order> orders { get; set; }
+        public virtual DbSet<product> products { get; set; }
+        public virtual DbSet<shipping_info> shipping_info { get; set; }
+        public virtual DbSet<user> users { get; set; }
     }
 }

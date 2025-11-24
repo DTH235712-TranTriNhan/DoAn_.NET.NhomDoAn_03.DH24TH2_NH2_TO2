@@ -5,13 +5,17 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="36de209585b84b6587159da71718fca6" Name="Diagram1">
-        <EntityTypeShape EntityType="SalesProjectNetDBModel.OrderItem" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="SalesProjectNetDBModel.Order" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="SalesProjectNetDBModel.Product" Width="1.5" PointX="3" PointY="4.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="SalesProjectNetDBModel.User" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
-        <AssociationConnector Association="SalesProjectNetDBModel.FK__OrderItem__order__44FF419A" ManuallyRouted="false" />
-        <AssociationConnector Association="SalesProjectNetDBModel.FK__OrderItems__SKU__45F365D3" ManuallyRouted="false" />
-        <AssociationConnector Association="SalesProjectNetDBModel.FK__Orders__userID__4222D4EF" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="SalesProjectNetDBModel.category" Width="1.5" PointX="0.75" PointY="8" />
+        <EntityTypeShape EntityType="SalesProjectNetDBModel.order_details" Width="1.5" PointX="5.25" PointY="2.625" />
+        <EntityTypeShape EntityType="SalesProjectNetDBModel.order" Width="1.5" PointX="3" PointY="2.375" />
+        <EntityTypeShape EntityType="SalesProjectNetDBModel.product" Width="1.5" PointX="6.625" PointY="6.875" />
+        <EntityTypeShape EntityType="SalesProjectNetDBModel.shipping_info" Width="1.5" PointX="3.25" PointY="6.375" />
+        <EntityTypeShape EntityType="SalesProjectNetDBModel.user" Width="1.5" PointX="0.75" PointY="2.5" />
+        <AssociationConnector Association="SalesProjectNetDBModel.FK__products__catego__4222D4EF" />
+        <AssociationConnector Association="SalesProjectNetDBModel.FK__order_det__order__4BAC3F29" />
+        <AssociationConnector Association="SalesProjectNetDBModel.FK__order_det__produ__4CA06362" />
+        <AssociationConnector Association="SalesProjectNetDBModel.FK__orders__user_id__47DBAE45" />
+        <AssociationConnector Association="SalesProjectNetDBModel.FK__shipping___order__5070F446" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

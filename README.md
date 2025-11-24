@@ -16,61 +16,117 @@ Dự án sử dụng Entity Framework để kết nối với Database SalesProj
 Bước 2.1: Tạo Database và Bảng
 Mở SQL Server Management Studio (SSMS) và chạy toàn bộ Script SQL dưới đây (hoặc chạy trong công cụ quản lý DB khác):
 ```sql
--- Tên Database: SalesProjectNetDB
+USE master;
+GO
+
+-- 1. Tạo Database mới
 CREATE DATABASE SalesProjectNetDB;
-GO 
+GO
+
+-- 2. Sử dụng Database vừa tạo
 USE SalesProjectNetDB;
 GO
 
--- 1. Bảng Users (Người dùng & Phân quyền)
-CREATE TABLE Users (
-    userID VARCHAR(50) PRIMARY KEY,
-    userName VARCHAR(50) UNIQUE NOT NULL, 
+-- =================================================================
+-- TẠO CÁC BẢNG (TABLES)
+-- =================================================================
+
+-- Bảng Users
+CREATE TABLE users (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE, 
     password VARCHAR(255) NOT NULL,
-    fullName NVARCHAR(100), 
-    phone VARCHAR(20),
-    address NVARCHAR(255), 
-    userRole VARCHAR(10) NOT NULL,
-    CONSTRAINT CHK_UserRole CHECK (userRole IN ('Admin', 'User', 'Guest'))
+    email VARCHAR(100), 
+    phone_number VARCHAR(20),
+    full_name NVARCHAR(100), 
+    role VARCHAR(10) DEFAULT 'user',
+    created_at DATETIME DEFAULT GETDATE(),
+    CONSTRAINT CK_Users_Role CHECK (role IN ('user', 'admin')) 
 );
+GO
 
--- 2. Bảng Products (Hàng hóa & Tồn kho)
-CREATE TABLE Products (
-    SKU VARCHAR(50) PRIMARY KEY,
-    name NVARCHAR(100) NOT NULL UNIQUE, 
-    category NVARCHAR(100), 
-    price DECIMAL(18, 0) NOT NULL,
-    stockQuantity INT NOT NULL DEFAULT 0,
-    ImagePath NVARCHAR(MAX),
-    Description NVARCHAR(MAX),
-    isActive BIT NOT NULL DEFAULT 1
+-- Tạo Index duy nhất cho Email (Bỏ qua NULL)
+CREATE UNIQUE INDEX IX_Users_Email_Unique ON users(email) WHERE email IS NOT NULL;
+GO
+
+-- Bảng Categories
+CREATE TABLE categories (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    name NVARCHAR(100) NOT NULL,
+    code VARCHAR(50) NOT NULL UNIQUE
 );
+GO
 
--- 3. Bảng Orders (Đơn hàng/Hóa đơn)
-CREATE TABLE Orders (
-    orderID INT IDENTITY(1,1) PRIMARY KEY,
-    userID VARCHAR(50), 
-    orderDate DATETIME NOT NULL DEFAULT GETDATE(),
-    totalAmount DECIMAL(18, 0) NOT NULL,
-    status VARCHAR(50) NOT NULL DEFAULT 'Completed',
-    FOREIGN KEY (userID) REFERENCES Users(userID)
+-- Bảng Products
+CREATE TABLE products (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    category_id INT,
+    name NVARCHAR(255) NOT NULL,
+    description NVARCHAR(MAX),   
+    price DECIMAL(18, 0) NOT NULL, 
+    image NVARCHAR(255),
+    is_active BIT DEFAULT 1, 
+    created_at DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
 );
+GO
 
--- 4. Bảng OrderItems (Chi tiết Đơn hàng)
-CREATE TABLE OrderItems (
-    itemID INT IDENTITY(1,1) PRIMARY KEY,
-    orderID INT NOT NULL, 
-    SKU VARCHAR(50) NOT NULL, 
+-- Bảng Orders
+CREATE TABLE orders (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    user_id INT,
+    total_money DECIMAL(18, 0),
+    shipping_fee DECIMAL(18, 0) DEFAULT 0,
+    status VARCHAR(20) DEFAULT 'Pending',
+    payment_method NVARCHAR(50), 
+    created_at DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT CK_Orders_Status CHECK (status IN ('Pending', 'Processing', 'Completed', 'Canceled'))
+);
+GO
+
+-- Bảng Order Details
+CREATE TABLE order_details (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
     quantity INT NOT NULL,
-    unitPrice DECIMAL(18, 0) NOT NULL,
-    FOREIGN KEY (orderID) REFERENCES Orders(orderID),
-    FOREIGN KEY (SKU) REFERENCES Products(SKU)
+    unit_price DECIMAL(18, 0) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE, 
+    FOREIGN KEY (product_id) REFERENCES products(id)
 );
+GO
 
--- Dữ liệu Khởi tạo
-INSERT INTO Users (userID, userName, password, fullName, userRole) VALUES
-('AD001', 'admin', '123', N'Quản trị viên Hệ thống', 'Admin'),
-('GT001', 'guest', '123', N'Khách Vãng Lai', 'Guest');
+-- Bảng Shipping Info
+CREATE TABLE shipping_info (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    order_id INT UNIQUE, 
+    recipient_name NVARCHAR(100) NOT NULL, 
+    phone_number VARCHAR(20) NOT NULL,
+    address NVARCHAR(MAX) NOT NULL, 
+    notes NVARCHAR(MAX), 
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+);
+GO
+
+-- =================================================================
+-- INSERT DỮ LIỆU MẪU
+-- =================================================================
+
+INSERT INTO users (username, password, full_name, role, email) 
+VALUES ('admin', '123456', N'Quản Trị Viên', 'admin', 'admin@example.com');
+
+INSERT INTO users (username, password, full_name, role, email) 
+VALUES ('khachhang', '123456', N'Nguyễn Văn A', 'user', NULL);
+
+INSERT INTO categories (name, code) VALUES (N'Bánh Mochi', 'mochi');
+INSERT INTO categories (name, code) VALUES (N'Bánh Tart', 'tart');
+
+INSERT INTO products (category_id, name, price, description) 
+VALUES (1, N'Mochi Trà Xanh', 25000, N'Vị trà xanh Nhật Bản thơm ngon');
+
+INSERT INTO products (category_id, name, price, description) 
+VALUES (2, N'Tart Trứng', 15000, N'Bánh tart trứng nướng giòn rụm');
 ```
 
 Bước 2.2: Cập nhật Chuỗi Kết nối

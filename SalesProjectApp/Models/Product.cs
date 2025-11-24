@@ -12,24 +12,25 @@ namespace SalesProjectApp.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Product
+    public partial class product
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Product()
+        public product()
         {
-            this.OrderItems = new HashSet<OrderItem>();
+            this.order_details = new HashSet<order_details>();
         }
     
-        public string SKU { get; set; }
+        public int id { get; set; }
+        public Nullable<int> category_id { get; set; }
         public string name { get; set; }
-        public string category { get; set; }
+        public string description { get; set; }
         public decimal price { get; set; }
-        public int stockQuantity { get; set; }
-        public string ImagePath { get; set; }
-        public string Description { get; set; }
-        public bool isActive { get; set; }
+        public string image { get; set; }
+        public Nullable<bool> is_active { get; set; }
+        public Nullable<System.DateTime> created_at { get; set; }
     
+        public virtual category category { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrderItem> OrderItems { get; set; }
+        public virtual ICollection<order_details> order_details { get; set; }
     }
 }

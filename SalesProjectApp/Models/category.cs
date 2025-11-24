@@ -12,27 +12,19 @@ namespace SalesProjectApp.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class order
+    public partial class category
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public order()
+        public category()
         {
-            this.order_details = new HashSet<order_details>();
-            this.shipping_info = new HashSet<shipping_info>();
+            this.products = new HashSet<product>();
         }
     
         public int id { get; set; }
-        public Nullable<int> user_id { get; set; }
-        public Nullable<decimal> total_money { get; set; }
-        public Nullable<decimal> shipping_fee { get; set; }
-        public string status { get; set; }
-        public string payment_method { get; set; }
-        public Nullable<System.DateTime> created_at { get; set; }
+        public string name { get; set; }
+        public string code { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<order_details> order_details { get; set; }
-        public virtual user user { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<shipping_info> shipping_info { get; set; }
+        public virtual ICollection<product> products { get; set; }
     }
 }
