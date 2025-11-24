@@ -7,41 +7,46 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System.Xml.Linq;
 
 namespace SalesProjectApp.Forms.Auth
 {
-    public partial class LoginForm : Form
+    public partial class Register : Form
     {
-        // Khai báo màu sắc
-        Color placeholderColor = Color.Gray; // Màu chữ gợi ý (Xám)
-        Color inputColor = Color.Black;      // Màu chữ khi nhập (Đen)
+        // Khai báo màu sắc cho đẹp
+        Color placeholderColor = Color.Gray;
+        Color inputColor = Color.Black;
 
-        public LoginForm()
+        public Register()
         {
             InitializeComponent();
-            SetupPlaceholders(); // Gọi hàm tạo chữ gợi ý ngay khi mở form
+            SetupPlaceholders(); // Gọi hàm thiết lập khi mở form;\
+            this.lnkLogin.LinkClicked += new LinkLabelLinkClickedEventHandler(this.lnkLogin_LinkClicked);
         }
 
-        // --- 1. CẤU HÌNH PLACEHOLDER ---
+        // Hàm này dùng để gán sự kiện cho các ô nhập
         private void SetupPlaceholders()
         {
-            // Cài đặt cho ô Tên đăng nhập
-            // Lưu ý: Chuỗi "Email / SĐT" phải khớp với mong muốn của bạn
-            SetPlaceholder(txtUsername, "Email / SĐT");
+            // 1. Cài đặt cho ô HỌ TÊN
+            SetPlaceholder(txtName, "Họ và tên");
 
-            // Cài đặt cho ô Mật khẩu
+            // 2. Cài đặt cho ô EMAIL
+            SetPlaceholder(txtEmail, "Email hoặc SĐT");
+
+            // 3. Cài đặt cho ô MẬT KHẨU (Xử lý đặc biệt vì có dấu *)
             SetPlaceholderPassword(txtPassword, "Mật khẩu");
+
+            // 4. Cài đặt cho ô NHẬP LẠI MẬT KHẨU
+            SetPlaceholderPassword(txtConfirmPassword, "Nhập lại mật khẩu");
         }
 
-        // --- 2. LOGIC CHO Ô NHẬP THƯỜNG (USERNAME) ---
+        // --- LOGIC XỬ LÝ CHO Ô THƯỜNG (Tên, Email) ---
         private void SetPlaceholder(TextBox txt, string placeholderText)
         {
-            // Trạng thái ban đầu
             txt.Text = placeholderText;
             txt.ForeColor = placeholderColor;
 
-            // Khi bấm chuột VÀO (Enter)
+            // Sự kiện khi bấm chuột VÀO (Enter)
             txt.Enter += (s, e) => {
                 if (txt.Text == placeholderText)
                 {
@@ -50,7 +55,7 @@ namespace SalesProjectApp.Forms.Auth
                 }
             };
 
-            // Khi bấm chuột RA (Leave)
+            // Sự kiện khi bấm chuột RA (Leave)
             txt.Leave += (s, e) => {
                 if (string.IsNullOrWhiteSpace(txt.Text))
                 {
@@ -60,13 +65,12 @@ namespace SalesProjectApp.Forms.Auth
             };
         }
 
-        // --- 3. LOGIC CHO Ô MẬT KHẨU (PASSWORD) ---
+        // --- LOGIC XỬ LÝ RIÊNG CHO Ô MẬT KHẨU (Ẩn hiện dấu *) ---
         private void SetPlaceholderPassword(TextBox txt, string placeholderText)
         {
-            // Trạng thái ban đầu
             txt.Text = placeholderText;
             txt.ForeColor = placeholderColor;
-            txt.UseSystemPasswordChar = false; // Hiện chữ "Mật khẩu" rõ ràng (không che)
+            txt.UseSystemPasswordChar = false; // Lúc đầu hiện chữ "Mật khẩu" thì không che
 
             // Khi bấm VÀO
             txt.Enter += (s, e) => {
@@ -74,7 +78,7 @@ namespace SalesProjectApp.Forms.Auth
                 {
                     txt.Text = "";
                     txt.ForeColor = inputColor;
-                    txt.UseSystemPasswordChar = true; // Bắt đầu nhập thì biến thành dấu chấm tròn
+                    txt.UseSystemPasswordChar = true; // Bắt đầu nhập thì bật chế độ che mật khẩu (*)
                 }
             };
 
@@ -89,15 +93,14 @@ namespace SalesProjectApp.Forms.Auth
             };
         }
 
-        // --- 4. SỰ KIỆN BẤM LINK "ĐĂNG KÝ NGAY" ---
-        private void lnkRegister_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void lnkLogin_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // Mở form Đăng ký
-            Register registerForm = new Register();
-            registerForm.Show();
+            // 1.Mở lại form Đăng nhập
+            LoginForm loginForm = new LoginForm();
+            loginForm.Show();
 
-            // Ẩn form Đăng nhập hiện tại đi
-            this.Hide();
+            // 2. Đóng form Đăng ký hiện tại đi cho nhẹ máy
+            this.Close();
         }
     }
 }
