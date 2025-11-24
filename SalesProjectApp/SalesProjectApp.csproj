@@ -35,6 +35,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <Win32Resource>
+    </Win32Resource>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath>
@@ -100,6 +104,7 @@
     <Compile Include="Forms\POS\POSMainForm.Designer.cs">
       <DependentUpon>POSMainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\AppTheme.cs" />
     <Compile Include="Models\category.cs">
       <DependentUpon>SalesModel.tt</DependentUpon>
     </Compile>
@@ -112,6 +117,7 @@
     <Compile Include="Models\product.cs">
       <DependentUpon>SalesModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Session.cs" />
     <Compile Include="Models\shipping_info.cs">
       <DependentUpon>SalesModel.tt</DependentUpon>
     </Compile>
@@ -134,6 +140,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SalesModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Repositories\ProductRepository.cs">
       <SubType>Form</SubType>
@@ -159,18 +170,17 @@
     <Compile Include="Services\ProductService.Designer.cs">
       <DependentUpon>ProductService.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Forms\Auth\LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Auth\RegisterForm.resx">
       <DependentUpon>RegisterForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -203,6 +213,8 @@
       <DependentUpon>SalesModel.edmx</DependentUpon>
       <LastGenOutput>SalesModel.cs</LastGenOutput>
     </Content>
+    <None Include="Resources\XemPW.png" />
+    <None Include="Resources\AnPW.png" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
