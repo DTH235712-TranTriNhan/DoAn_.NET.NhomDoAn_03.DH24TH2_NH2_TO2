@@ -1,103 +1,167 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using SalesProjectApp.Models; // Quan trọng: Gọi file AppTheme
 
 namespace SalesProjectApp.Forms.Auth
 {
     public partial class LoginForm : Form
     {
-        // Khai báo màu sắc
-        Color placeholderColor = Color.Gray; // Màu chữ gợi ý (Xám)
-        Color inputColor = Color.Black;      // Màu chữ khi nhập (Đen)
+        // Không cần khai báo biến màu cứng nữa, dùng trực tiếp từ AppTheme
+        private bool isPasswordVisible = false;
 
         public LoginForm()
         {
             InitializeComponent();
-            SetupPlaceholders(); // Gọi hàm tạo chữ gợi ý ngay khi mở form
+
+            // 1. ÁP DỤNG MÀU SẮC TỰ ĐỘNG
+            ApplyTheme();
+
+            SetupPlaceholders();
+            this.AcceptButton = btnLogin;
+
+            // Events
+            this.btnLogin.Click += new EventHandler(this.btnLogin_Click);
+            this.lnkRegister.LinkClicked += new LinkLabelLinkClickedEventHandler(this.lnkRegisterLinkClicked);
+
+            // Logic Mắt thần
+            if (this.picEye != null)
+            {
+                this.picEye.Image = Properties.Resources.AnPW;
+                this.picEye.Click += new EventHandler(this.picEye_Click);
+            }
+
+            // --- HIỆU ỨNG HOVER DÙNG THEME ---
+            this.btnLogin.MouseEnter += (s, e) => {
+                this.btnLogin.BackColor = AppTheme.PrimaryHover; // Màu đậm khi rê chuột
+            };
+            this.btnLogin.MouseLeave += (s, e) => {
+                this.btnLogin.BackColor = AppTheme.PrimaryColor; // Màu gốc khi rời chuột
+            };
         }
 
-        // --- 1. CẤU HÌNH PLACEHOLDER ---
+        // --- HÀM ÁP DỤNG THEME ---
+        private void ApplyTheme()
+        {
+            this.BackColor = AppTheme.BackgroundColor;
+
+            lblTitle.ForeColor = AppTheme.PrimaryColor;
+
+            btnLogin.BackColor = AppTheme.PrimaryColor;
+            btnLogin.ForeColor = Color.White; // Chữ trên nút nên để trắng cho nổi
+
+            lnkRegister.LinkColor = AppTheme.PrimaryColor;
+        }
+
+        private void picEye_Click(object sender, EventArgs e)
+        {
+            isPasswordVisible = !isPasswordVisible;
+            if (isPasswordVisible)
+            {
+                txtPassword.UseSystemPasswordChar = false;
+                picEye.Image = Properties.Resources.XemPW;
+            }
+            else
+            {
+                if (txtPassword.Text != "Mật khẩu")
+                {
+                    txtPassword.UseSystemPasswordChar = true;
+                }
+                picEye.Image = Properties.Resources.AnPW;
+            }
+        }
+
         private void SetupPlaceholders()
         {
-            // Cài đặt cho ô Tên đăng nhập
-            // Lưu ý: Chuỗi "Email / SĐT" phải khớp với mong muốn của bạn
-            SetPlaceholder(txtUsername, "Email / SĐT");
-
-            // Cài đặt cho ô Mật khẩu
+            SetPlaceholder(txtUsername, "Tên đăng nhập");
             SetPlaceholderPassword(txtPassword, "Mật khẩu");
         }
 
-        // --- 2. LOGIC CHO Ô NHẬP THƯỜNG (USERNAME) ---
         private void SetPlaceholder(TextBox txt, string placeholderText)
         {
-            // Trạng thái ban đầu
-            txt.Text = placeholderText;
-            txt.ForeColor = placeholderColor;
-
-            // Khi bấm chuột VÀO (Enter)
             txt.Enter += (s, e) => {
                 if (txt.Text == placeholderText)
                 {
                     txt.Text = "";
-                    txt.ForeColor = inputColor;
+                    txt.ForeColor = AppTheme.TextColor; // Dùng màu Theme
                 }
             };
-
-            // Khi bấm chuột RA (Leave)
             txt.Leave += (s, e) => {
                 if (string.IsNullOrWhiteSpace(txt.Text))
                 {
                     txt.Text = placeholderText;
-                    txt.ForeColor = placeholderColor;
+                    txt.ForeColor = AppTheme.PlaceholderColor; // Dùng màu Theme
                 }
             };
         }
 
-        // --- 3. LOGIC CHO Ô MẬT KHẨU (PASSWORD) ---
         private void SetPlaceholderPassword(TextBox txt, string placeholderText)
         {
-            // Trạng thái ban đầu
-            txt.Text = placeholderText;
-            txt.ForeColor = placeholderColor;
-            txt.UseSystemPasswordChar = false; // Hiện chữ "Mật khẩu" rõ ràng (không che)
-
-            // Khi bấm VÀO
             txt.Enter += (s, e) => {
                 if (txt.Text == placeholderText)
                 {
                     txt.Text = "";
-                    txt.ForeColor = inputColor;
-                    txt.UseSystemPasswordChar = true; // Bắt đầu nhập thì biến thành dấu chấm tròn
+                    txt.ForeColor = AppTheme.TextColor; // Dùng màu Theme
+                    if (!isPasswordVisible) txt.UseSystemPasswordChar = true;
                 }
             };
-
-            // Khi bấm RA
             txt.Leave += (s, e) => {
                 if (string.IsNullOrWhiteSpace(txt.Text))
                 {
                     txt.Text = placeholderText;
-                    txt.ForeColor = placeholderColor;
-                    txt.UseSystemPasswordChar = false; // Hiện lại chữ gợi ý thì tắt che đi
+                    txt.ForeColor = AppTheme.PlaceholderColor; // Dùng màu Theme
+                    txt.UseSystemPasswordChar = false;
                 }
             };
         }
 
-        // --- 4. SỰ KIỆN BẤM LINK "ĐĂNG KÝ NGAY" ---
-        private void lnkRegister_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void lnkRegisterLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // Mở form Đăng ký
-            Register registerForm = new Register();
-            registerForm.Show();
-
-            // Ẩn form Đăng nhập hiện tại đi
+            RegisterForm registerForm = new RegisterForm();
             this.Hide();
+            registerForm.ShowDialog();
+            this.Show();
+        }
+
+        private void btnLogin_Click(object sender, EventArgs e)
+        {
+            string inputUser = txtUsername.Text.Trim();
+            string inputPass = txtPassword.Text.Trim();
+
+            if (string.IsNullOrEmpty(inputUser) || inputUser == "Tên đăng nhập" ||
+                string.IsNullOrEmpty(inputPass) || inputPass == "Mật khẩu")
+            {
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                using (var db = new SalesProjectNetDBEntities())
+                {
+                    var user = db.users.FirstOrDefault(u =>
+                        (u.username == inputUser || u.email == inputUser)
+                        && u.password == inputPass);
+
+                    if (user != null)
+                    {
+                        Session.CurrentUser = user;
+                        MessageBox.Show($"Đăng nhập thành công! Xin chào {user.full_name}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        // Mở form chính (Đã bỏ comment để chạy được)
+                        this.Hide();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Tài khoản hoặc mật khẩu không chính xác!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi kết nối: " + ex.Message);
+            }
         }
     }
 }
