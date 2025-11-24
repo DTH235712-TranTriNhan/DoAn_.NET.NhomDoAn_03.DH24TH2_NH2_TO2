@@ -1,4 +1,5 @@
-﻿using SalesProjectApp.Forms.Auth;
+﻿using SalesProjectApp.Forms.Admin;
+using SalesProjectApp.Forms.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,11 @@ namespace SalesProjectApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new LoginForm());
+
+            Application.Run(new AdminDashboardForm());
+            //Application.Run(new LoginForm());
+
+
         }
     }
 }
