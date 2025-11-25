@@ -9,27 +9,35 @@ namespace SalesProjectApp.Forms
         public int SelectedQty { get; private set; } = 1;
         private decimal _price;
 
-        // Constructor nhận đầy đủ thông tin: Tên, Giá, Ảnh, Mô tả
         public ProductDetailForm(string name, decimal price, Image img, string description)
         {
             InitializeComponent();
 
-            // 1. Gán dữ liệu vào giao diện
+            // Gán dữ liệu
             lblName.Text = name;
             lblPrice.Text = price.ToString("N0") + "đ";
             pbImg.Image = img;
-            lblDesc.Text = description; // <--- Hiển thị mô tả ở đây
+
+            // Dòng này gán mô tả (đã xóa dấu comment //)
+            if (string.IsNullOrEmpty(description))
+            {
+                lblDesc.Text = "Chưa có mô tả cho sản phẩm này.";
+            }
+            else
+            {
+                lblDesc.Text = description;
+            }
 
             _price = price;
             UpdateTotal();
 
-            // 2. Các sự kiện nút bấm
+            // Sự kiện nút bấm
             btnPlus.Click += (s, e) => { SelectedQty++; UpdateTotal(); };
             btnMinus.Click += (s, e) => { if (SelectedQty > 1) SelectedQty--; UpdateTotal(); };
 
             btnAdd.Click += (s, e) =>
             {
-                this.DialogResult = DialogResult.OK; // Bấm thêm thì trả về OK
+                this.DialogResult = DialogResult.OK;
                 this.Close();
             };
         }
