@@ -1,36 +1,92 @@
 ﻿using System;
-using System.Drawing;
+using System.Data;
+using System.Linq;
 using System.Windows.Forms;
+using System.Runtime.InteropServices; // Thư viện cho Placeholder
+using SalesProjectApp.Models;
 
 namespace SalesProjectApp.Forms.Admin
 {
     public partial class UCCustomer : UserControl
     {
+        // API Placeholder
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
+        private const int EM_SETCUEBANNER = 0x1501;
+
         public UCCustomer()
         {
             InitializeComponent();
-            LoadSampleData(); // Nạp dữ liệu giả
+
+            // 1. Làm đẹp bảng
+            UIHelper.StyleDataGridView(dgvCustomer);
+
+            // 2. Placeholder tìm kiếm
+            SendMessage(txtSearch.Handle, EM_SETCUEBANNER, 0, "Tìm tên, SĐT, email...");
+
+            LoadCustomerData();
+
+            // Gắn sự kiện tìm kiếm
+            this.txtSearch.TextChanged += (s, e) => LoadCustomerData(txtSearch.Text.Trim());
         }
 
-        private void LoadSampleData()
+        private void LoadCustomerData(string keyword = "")
         {
-            // Thêm dữ liệu mẫu vào bảng Khách hàng
-            // Cột: Mã KH | Họ Tên | SĐT | Email | Địa Chỉ | Nút Sửa
+            try
+            {
+                using (var db = new SalesProjectNetDBEntities())
+                {
+                    var query = db.users.Where(u => u.role == "user");
 
-            dgvCustomer.Rows.Add("KH001", "Nguyễn Văn An", "0909123456", "an.nguyen@gmail.com", "Q.1, TP.HCM");
-            dgvCustomer.Rows.Add("KH002", "Trần Thị Bích", "0912345678", "bich.tran@yahoo.com", "Q.3, TP.HCM");
-            dgvCustomer.Rows.Add("KH003", "Lê Hoàng Nam", "0987654321", "nam.le@outlook.com", "Q.Bình Thạnh, TP.HCM");
-            dgvCustomer.Rows.Add("KH004", "Phạm Thu Hà", "0368889999", "thuha.pham@gmail.com", "TP. Thủ Đức");
-            dgvCustomer.Rows.Add("KH005", "Hoàng Anh Tuấn", "0933444555", "tuan.hoang@company.vn", "Q.7, TP.HCM");
+                    if (!string.IsNullOrEmpty(keyword))
+                    {
+                        query = query.Where(u =>
+                            u.full_name.Contains(keyword) ||
+                            u.phone_number.Contains(keyword) ||
+                            u.email.Contains(keyword)
+                        );
+                    }
+
+                    var listCustomers = query
+                        .OrderByDescending(u => u.created_at)
+                        .Select(u => new
+                        {
+                            u.id,
+                            u.full_name,
+                            u.phone_number,
+                            u.email,
+                            Address = "---" // Tạm thời
+                        })
+                        .ToList();
+
+                    dgvCustomer.Rows.Clear();
+                    foreach (var item in listCustomers)
+                    {
+                        string codeDisplay = $"KH{item.id:D3}";
+                        string name = item.full_name ?? "Chưa cập nhật";
+                        string phone = item.phone_number ?? "---";
+                        string email = item.email ?? "---";
+
+                        dgvCustomer.Rows.Add(codeDisplay, name, phone, email, item.Address, "Sửa");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message);
+            }
         }
 
-        // Sự kiện khi bấm nút "Sửa" trong bảng
         private void dgvCustomer_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0 && e.ColumnIndex == 5) // Cột nút bấm là cột số 5
+            if (e.RowIndex >= 0 && e.ColumnIndex == 5)
             {
-                string tenKhach = dgvCustomer.Rows[e.RowIndex].Cells[1].Value.ToString();
-                MessageBox.Show("Sửa thông tin khách hàng: " + tenKhach);
+                string displayCode = dgvCustomer.Rows[e.RowIndex].Cells[0].Value.ToString();
+                int realCustomerId = int.Parse(displayCode.Replace("KH", ""));
+
+                FormCustomerEdit frm = new FormCustomerEdit(realCustomerId);
+                frm.ShowDialog();
+                LoadCustomerData();
             }
         }
     }
