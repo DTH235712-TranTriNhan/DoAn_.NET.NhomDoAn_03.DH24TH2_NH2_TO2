@@ -68,17 +68,29 @@
     <Compile Include="Forms\Admin\AdminDashboardForm.Designer.cs">
       <DependentUpon>AdminDashboardForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Admin\ProductManagementForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Forms\Admin\UCCustomer.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\Admin\ProductManagementForm.Designer.cs">
-      <DependentUpon>ProductManagementForm.cs</DependentUpon>
+    <Compile Include="Forms\Admin\UCCustomer.Designer.cs">
+      <DependentUpon>UCCustomer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Admin\UserManagementForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Forms\Admin\UCOrder.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\Admin\UserManagementForm.Designer.cs">
-      <DependentUpon>UserManagementForm.cs</DependentUpon>
+    <Compile Include="Forms\Admin\UCOrder.Designer.cs">
+      <DependentUpon>UCOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Admin\UCOverview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Admin\UCOverview.Designer.cs">
+      <DependentUpon>UCOverview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Admin\UCProduct.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Admin\UCProduct.Designer.cs">
+      <DependentUpon>UCProduct.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Auth\LoginForm.cs">
       <SubType>Form</SubType>
@@ -170,6 +182,15 @@
     <Compile Include="Services\ProductService.Designer.cs">
       <DependentUpon>ProductService.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Forms\Admin\UCCustomer.resx">
+      <DependentUpon>UCCustomer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Admin\UCOrder.resx">
+      <DependentUpon>UCOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Admin\UCOverview.resx">
+      <DependentUpon>UCOverview.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Auth\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
