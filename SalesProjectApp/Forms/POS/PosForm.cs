@@ -47,11 +47,11 @@ namespace SalesProjectApp.Forms
         private void CreateProductCard(Product p)
         {
             // TÍNH TOÁN ĐỂ CHIA 3 CỘT
-            int totalOccupied = 160 + 400 + 80; // Cột trái + Cột phải + Scrollbar
+            int totalOccupied = 160 + 400 ; // Cột trái + Cột phải + Scrollbar
             int availableWidth = Screen.PrimaryScreen.Bounds.Width - totalOccupied;
 
             // Chia 3, trừ đi margin của mỗi thẻ
-            int cardWidth = (availableWidth / 3) - 20;
+            int cardWidth = (availableWidth / 3) - 5;
             int cardHeight = 280;
 
             // 1. Panel Card
@@ -145,45 +145,26 @@ namespace SalesProjectApp.Forms
 
             foreach (var cat in categories)
             {
-                // --- SỬA TẠI ĐÂY ---
+                // SỬA LỖI CHÍNH TẢ Ở ĐÂY: FlatAppearance (chứ không phải Flattenace)
                 Button btn = new Button
                 {
                     Text = cat,
                     Size = new Size(140, 50),
                     FlatStyle = FlatStyle.Flat,
-                    FlatAppearance = { BorderSize = 0 },
+                    FlatAppearance = { BorderSize = 0 }, // <--- ĐÃ SỬA
                     Font = new Font("Segoe UI", 11),
                     Cursor = Cursors.Hand,
                     Margin = new Padding(0, 0, 0, 5)
                 };
 
-                // ĐƯA RA NGOÀI ĐỂ CHỈNH VIỀN (Sẽ hết lỗi đỏ)
-                btn.FlatAppearance.BorderSize = 0;
+                if (cat == "Tất cả") { btn.BackColor = Color.FromArgb(233, 30, 99); btn.ForeColor = Color.White; }
+                else { btn.BackColor = Color.White; btn.ForeColor = Color.Black; }
 
-                // Logic màu sắc (giữ nguyên)
-                if (cat == "Tất cả")
-                {
-                    btn.BackColor = Color.FromArgb(233, 30, 99);
-                    btn.ForeColor = Color.White;
-                }
-                else
-                {
-                    btn.BackColor = Color.White;
-                    btn.ForeColor = Color.Black;
-                }
-
-                // Logic click (giữ nguyên)
                 btn.Click += (s, e) => {
-                    foreach (Control c in flpCategory.Controls)
-                    {
-                        c.BackColor = Color.White;
-                        c.ForeColor = Color.Black;
-                    }
-                    btn.BackColor = Color.FromArgb(233, 30, 99);
-                    btn.ForeColor = Color.White;
+                    foreach (Control c in flpCategory.Controls) { c.BackColor = Color.White; c.ForeColor = Color.Black; }
+                    btn.BackColor = Color.FromArgb(233, 30, 99); btn.ForeColor = Color.White;
                     LoadMenu(cat);
                 };
-
                 flpCategory.Controls.Add(btn);
             }
         }
