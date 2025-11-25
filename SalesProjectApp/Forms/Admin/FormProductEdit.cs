@@ -113,7 +113,8 @@ namespace SalesProjectApp.Forms.Admin
                     if (_productId == 0) p.created_at = DateTime.Now;
 
                     db.SaveChanges();
-                    MessageBox.Show("Lưu thành công!", "Thông báo");
+                    string action = _productId == 0 ? "ADD PRODUCT" : "EDIT PRODUCT";
+                    LogHelper.Write(action, $"Đã lưu thông tin món: {txtName.Text}");
                     this.Close();
                 }
             }

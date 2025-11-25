@@ -31,5 +31,6 @@ namespace SalesProjectApp.Models
         public virtual DbSet<product> products { get; set; }
         public virtual DbSet<shipping_info> shipping_info { get; set; }
         public virtual DbSet<user> users { get; set; }
+        public virtual DbSet<system_logs> system_logs { get; set; }
     }
 }

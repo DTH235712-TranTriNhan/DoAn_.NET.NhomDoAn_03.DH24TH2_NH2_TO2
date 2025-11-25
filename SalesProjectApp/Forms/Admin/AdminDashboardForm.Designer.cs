@@ -23,6 +23,7 @@
             this.btnCategory = new FontAwesome.Sharp.IconButton();
             this.btnProduct = new FontAwesome.Sharp.IconButton();
             this.btnOverview = new FontAwesome.Sharp.IconButton();
+            this.btnLog = new FontAwesome.Sharp.IconButton();
             // ------------------------------------------
             this.lblSubLogo = new System.Windows.Forms.Label();
             this.lblLogo = new System.Windows.Forms.Label();
@@ -37,6 +38,7 @@
             this.pnlSidebar.Controls.Add(this.btnLogout);
             this.pnlSidebar.Controls.Add(this.btnWebsite);
             this.pnlSidebar.Controls.Add(this.btnCustomer);
+            this.pnlSidebar.Controls.Add(this.btnLog);
             this.pnlSidebar.Controls.Add(this.btnOrder);
             this.pnlSidebar.Controls.Add(this.btnCategory);
             this.pnlSidebar.Controls.Add(this.btnProduct);
@@ -173,6 +175,30 @@
             this.btnCustomer.Click += new System.EventHandler(this.btnCustomer_Click);
 
             // 
+            // btnLog (Log Hệ thống - Icon FileAlt)
+            // 
+            this.btnLog.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnLog.FlatAppearance.BorderSize = 0;
+            this.btnLog.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLog.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.btnLog.ForeColor = System.Drawing.Color.Silver;
+            this.btnLog.IconChar = FontAwesome.Sharp.IconChar.FileAlt; // Icon Log/File
+            this.btnLog.IconColor = System.Drawing.Color.Silver;
+            this.btnLog.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnLog.IconSize = 32;
+            this.btnLog.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnLog.Location = new System.Drawing.Point(0, 400); // Đặt sau btnCustomer (340 + 60)
+            this.btnLog.Name = "btnLog";
+            this.btnLog.Padding = new System.Windows.Forms.Padding(10, 0, 20, 0);
+            this.btnLog.Size = new System.Drawing.Size(250, 60);
+            this.btnLog.TabIndex = 7; // Chuyển TabIndex thành 7
+            this.btnLog.Text = "Log Hệ thống";
+            this.btnLog.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnLog.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnLog.UseVisualStyleBackColor = true;
+            this.btnLog.Click += new System.EventHandler(this.btnLog_Click);
+
+            // 
             // btnWebsite (Icon Globe)
             // 
             this.btnWebsite.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -285,5 +311,6 @@
         private FontAwesome.Sharp.IconButton btnCustomer;
         private FontAwesome.Sharp.IconButton btnWebsite;
         private FontAwesome.Sharp.IconButton btnLogout;
+        private FontAwesome.Sharp.IconButton btnLog;
     }
 }

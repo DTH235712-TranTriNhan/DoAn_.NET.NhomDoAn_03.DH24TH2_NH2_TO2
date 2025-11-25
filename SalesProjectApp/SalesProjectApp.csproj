@@ -136,6 +136,12 @@
     <Compile Include="Forms\Admin\UCProduct.Designer.cs">
       <DependentUpon>UCProduct.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Admin\UCSystemLog.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Admin\UCSystemLog.Designer.cs">
+      <DependentUpon>UCSystemLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Auth\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -170,6 +176,7 @@
     <Compile Include="Models\category.cs">
       <DependentUpon>SalesModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\LogHelper.cs" />
     <Compile Include="Models\order.cs">
       <DependentUpon>SalesModel.tt</DependentUpon>
     </Compile>
@@ -181,6 +188,9 @@
     </Compile>
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\shipping_info.cs">
+      <DependentUpon>SalesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\system_logs.cs">
       <DependentUpon>SalesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UIHelper.cs" />
