@@ -1,4 +1,5 @@
-﻿using SalesProjectApp.Forms.Admin;
+﻿using SalesProjectApp.Forms;
+using SalesProjectApp.Forms.Admin;
 using System;
 using System.Windows.Forms;
 
@@ -15,7 +16,6 @@ namespace SalesProjectApp
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new AdminDashboardForm());
-
         }
     }
 }

@@ -94,14 +94,12 @@ namespace SalesProjectApp.Forms.Admin
 
         private void btnWebsite_Click(object sender, EventArgs e)
         {
-            // Ghi Log khi Admin chuyển sang chế độ POS/Website
-            LogHelper.Write("SWITCH_MODE", "Admin chuyển sang chế độ bán hàng (POS/Website).");
+            LogHelper.Write("SWITCH_MODE", "Admin chuyển sang POS");
 
-            SalesProjectApp.Forms.PosForm frmPos = new SalesProjectApp.Forms.PosForm();
-
+            PosForm frmPos = new PosForm();
+            frmPos.FormClosed += (s, args) => this.Show(); // hiện lại Admin khi POS đóng
             this.Hide();
-            frmPos.ShowDialog();
-            this.Show();
+            frmPos.Show();
         }
 
         private void btnLogout_Click(object sender, EventArgs e)
