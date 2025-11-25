@@ -104,17 +104,23 @@
     <Compile Include="Forms\Auth\RegisterForm.Designer.cs">
       <DependentUpon>RegisterForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\POS\OrderHistoryForm.cs">
+    <Compile Include="Forms\POS\PosForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\POS\OrderHistoryForm.Designer.cs">
-      <DependentUpon>OrderHistoryForm.cs</DependentUpon>
+    <Compile Include="Forms\POS\PosForm.Designer.cs">
+      <DependentUpon>PosForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\POS\POSMainForm.cs">
+    <Compile Include="Forms\POS\ProductDetailForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\POS\POSMainForm.Designer.cs">
-      <DependentUpon>POSMainForm.cs</DependentUpon>
+    <Compile Include="Forms\POS\ProductDetailForm.Designer.cs">
+      <DependentUpon>ProductDetailForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\POS\UCCart.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\POS\UCCart.Designer.cs">
+      <DependentUpon>UCCart.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\AppTheme.cs" />
     <Compile Include="Models\category.cs">
@@ -196,6 +202,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Auth\RegisterForm.resx">
       <DependentUpon>RegisterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\POS\PosForm.resx">
+      <DependentUpon>PosForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\POS\UCCart.resx">
+      <DependentUpon>UCCart.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
