@@ -14,7 +14,7 @@ namespace SalesProjectApp.Forms.Auth
         public LoginForm()
         {
             InitializeComponent();
-
+            picEye.BringToFront();
             // 1. ÁP DỤNG MÀU SẮC TỰ ĐỘNG
             ApplyTheme();
 

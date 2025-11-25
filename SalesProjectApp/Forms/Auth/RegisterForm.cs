@@ -2,15 +2,12 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using SalesProjectApp.Models;
+using SalesProjectApp.Models; // Gọi AppTheme
 
 namespace SalesProjectApp.Forms.Auth
 {
     public partial class RegisterForm : Form
     {
-        Color placeholderColor = Color.Gray;
-        Color inputColor = Color.Black;
-
         // Biến theo dõi trạng thái ẩn/hiện cho 2 ô mật khẩu
         private bool isPassVisible = false;
         private bool isConfirmVisible = false;
@@ -18,66 +15,93 @@ namespace SalesProjectApp.Forms.Auth
         public RegisterForm()
         {
             InitializeComponent();
+
+            // 1. QUAN TRỌNG: Đưa 2 con mắt lên lớp trên cùng để không bị che
+            if (picEyePass != null) picEyePass.BringToFront();
+            if (picEyeConfirm != null) picEyeConfirm.BringToFront();
+
+            // 2. Áp dụng giao diện từ AppTheme
+            ApplyTheme();
+
             SetupPlaceholders();
 
             // Nhấn Enter là bấm nút Đăng ký
             this.AcceptButton = btnRegister;
 
-            // Gắn sự kiện Click thủ công
+            // Events
             this.btnRegister.Click += new EventHandler(this.btnRegister_Click);
             this.lnkLogin.LinkClicked += new LinkLabelLinkClickedEventHandler(this.lnkLoginLinkClicked);
 
-            // Gắn sự kiện cho 2 Con mắt (Nếu Designer đã tạo)
+            // Gắn sự kiện cho 2 Con mắt
             if (this.picEyePass != null && this.picEyeConfirm != null)
             {
-                // Mặc định là mắt đóng
                 this.picEyePass.Image = Properties.Resources.AnPW;
                 this.picEyeConfirm.Image = Properties.Resources.AnPW;
 
                 this.picEyePass.Click += new EventHandler(this.picEyePass_Click);
                 this.picEyeConfirm.Click += new EventHandler(this.picEyeConfirm_Click);
             }
+
+            // --- HIỆU ỨNG HOVER NÚT ĐĂNG KÝ (Giống LoginForm) ---
+            this.btnRegister.MouseEnter += (s, e) => {
+                this.btnRegister.BackColor = AppTheme.PrimaryHover;
+            };
+            this.btnRegister.MouseLeave += (s, e) => {
+                this.btnRegister.BackColor = AppTheme.PrimaryColor;
+            };
         }
 
-        // --- SỰ KIỆN: CON MẮT 1 (MẬT KHẨU) ---
+        // --- HÀM ÁP DỤNG THEME ---
+        private void ApplyTheme()
+        {
+            // Màu nền form
+            this.BackColor = AppTheme.BackgroundColor;
+
+            // Tiêu đề & Link
+            lblTitle.ForeColor = AppTheme.PrimaryColor;
+            lnkLogin.LinkColor = AppTheme.PrimaryColor;
+
+            // Nút đăng ký
+            btnRegister.BackColor = AppTheme.PrimaryColor;
+            btnRegister.ForeColor = Color.White;
+        }
+
+        // --- CÁC SỰ KIỆN LOGIC GIỮ NGUYÊN ---
+
         private void picEyePass_Click(object sender, EventArgs e)
         {
             isPassVisible = !isPassVisible;
-            if (isPassVisible)
-            {
-                txtPassword.UseSystemPasswordChar = false;
-                picEyePass.Image = Properties.Resources.XemPW;
-            }
-            else
-            {
-                if (txtPassword.Text != "Mật khẩu") txtPassword.UseSystemPasswordChar = true;
-                picEyePass.Image = Properties.Resources.AnPW;
-            }
+            TogglePasswordVisibility(txtPassword, picEyePass, isPassVisible, "Mật khẩu");
         }
 
-        // --- SỰ KIỆN: CON MẮT 2 (NHẬP LẠI MẬT KHẨU) ---
         private void picEyeConfirm_Click(object sender, EventArgs e)
         {
             isConfirmVisible = !isConfirmVisible;
-            if (isConfirmVisible)
+            TogglePasswordVisibility(txtConfirmPassword, picEyeConfirm, isConfirmVisible, "Nhập lại mật khẩu");
+        }
+
+        // Hàm chung để xử lý ẩn hiện password gọn hơn
+        private void TogglePasswordVisibility(TextBox txt, PictureBox pic, bool isVisible, string placeholder)
+        {
+            if (isVisible)
             {
-                txtConfirmPassword.UseSystemPasswordChar = false;
-                picEyeConfirm.Image = Properties.Resources.XemPW;
+                txt.UseSystemPasswordChar = false;
+                pic.Image = Properties.Resources.XemPW;
             }
             else
             {
-                if (txtConfirmPassword.Text != "Nhập lại mật khẩu") txtConfirmPassword.UseSystemPasswordChar = true;
-                picEyeConfirm.Image = Properties.Resources.AnPW;
+                // Chỉ ẩn password nếu text không phải là placeholder
+                if (txt.Text != placeholder) txt.UseSystemPasswordChar = true;
+                pic.Image = Properties.Resources.AnPW;
             }
         }
 
-        // --- CẤU HÌNH PLACEHOLDER ---
         private void SetupPlaceholders()
         {
             SetPlaceholder(txtName, "Họ và tên");
             SetPlaceholder(txtEmail, "Tên đăng nhập ");
 
-            // Cần hàm riêng cho từng ô Password để check biến visible riêng
+            // Cần hàm riêng cho password
             SetPlaceholderPassword(txtPassword, "Mật khẩu", () => isPassVisible);
             SetPlaceholderPassword(txtConfirmPassword, "Nhập lại mật khẩu", () => isConfirmVisible);
         }
@@ -88,27 +112,25 @@ namespace SalesProjectApp.Forms.Auth
                 if (txt.Text == placeholderText)
                 {
                     txt.Text = "";
-                    txt.ForeColor = inputColor;
+                    txt.ForeColor = AppTheme.TextColor; // Dùng màu AppTheme
                 }
             };
             txt.Leave += (s, e) => {
                 if (string.IsNullOrWhiteSpace(txt.Text))
                 {
                     txt.Text = placeholderText;
-                    txt.ForeColor = placeholderColor;
+                    txt.ForeColor = AppTheme.PlaceholderColor; // Dùng màu AppTheme
                 }
             };
         }
 
-        // Hàm xử lý placeholder cho mật khẩu (nhận vào biến trạng thái tương ứng)
         private void SetPlaceholderPassword(TextBox txt, string placeholderText, Func<bool> getVisibleState)
         {
             txt.Enter += (s, e) => {
                 if (txt.Text == placeholderText)
                 {
                     txt.Text = "";
-                    txt.ForeColor = inputColor;
-                    // Nếu mắt đang đóng thì mới hiện dấu chấm
+                    txt.ForeColor = AppTheme.TextColor; // Dùng màu AppTheme
                     if (!getVisibleState()) txt.UseSystemPasswordChar = true;
                 }
             };
@@ -116,19 +138,17 @@ namespace SalesProjectApp.Forms.Auth
                 if (string.IsNullOrWhiteSpace(txt.Text))
                 {
                     txt.Text = placeholderText;
-                    txt.ForeColor = placeholderColor;
+                    txt.ForeColor = AppTheme.PlaceholderColor; // Dùng màu AppTheme
                     txt.UseSystemPasswordChar = false;
                 }
             };
         }
 
-        // --- LOGIC CHUYỂN TRANG ---
         private void lnkLoginLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            this.Close(); // Đóng form đăng ký đi
+            this.Close();
         }
 
-        // --- LOGIC ĐĂNG KÝ ---
         private void btnRegister_Click(object sender, EventArgs e)
         {
             string fullName = txtName.Text.Trim();
@@ -137,8 +157,9 @@ namespace SalesProjectApp.Forms.Auth
             string confirmPass = txtConfirmPassword.Text.Trim();
 
             // Validate
-            if (fullName == "Họ và tên" || username == "Tên đăng nhập " ||
-                pass == "Mật khẩu" || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(pass))
+            if (fullName == "Họ và tên" || string.IsNullOrEmpty(fullName) ||
+                username == "Tên đăng nhập " || string.IsNullOrEmpty(username) ||
+                pass == "Mật khẩu" || string.IsNullOrEmpty(pass))
             {
                 MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -162,7 +183,7 @@ namespace SalesProjectApp.Forms.Auth
 
                     user newUser = new user();
                     newUser.username = username;
-                    newUser.password = pass;
+                    newUser.password = pass; // Lưu ý: Thực tế nên mã hóa MD5/BCrypt trước khi lưu
                     newUser.full_name = fullName;
                     newUser.role = "user";
                     newUser.created_at = DateTime.Now;
@@ -172,7 +193,6 @@ namespace SalesProjectApp.Forms.Auth
                     db.SaveChanges();
 
                     MessageBox.Show("Đăng ký thành công! Vui lòng đăng nhập.", "Chúc mừng", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
                     this.Close();
                 }
             }
