@@ -5,7 +5,7 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="36de209585b84b6587159da71718fca6" Name="Diagram1">
-        <EntityTypeShape EntityType="SalesProjectNetDBModel.category" Width="1.5" PointX="0.75" PointY="8" />
+        <EntityTypeShape EntityType="SalesProjectNetDBModel.category" Width="1.5" PointX="3.25" PointY="9.125" />
         <EntityTypeShape EntityType="SalesProjectNetDBModel.order_details" Width="1.5" PointX="5.25" PointY="2.625" />
         <EntityTypeShape EntityType="SalesProjectNetDBModel.order" Width="1.5" PointX="3" PointY="2.375" />
         <EntityTypeShape EntityType="SalesProjectNetDBModel.product" Width="1.5" PointX="6.625" PointY="6.875" />
@@ -16,6 +16,8 @@
         <AssociationConnector Association="SalesProjectNetDBModel.FK__order_det__produ__4CA06362" />
         <AssociationConnector Association="SalesProjectNetDBModel.FK__orders__user_id__47DBAE45" />
         <AssociationConnector Association="SalesProjectNetDBModel.FK__shipping___order__5070F446" />
+        <EntityTypeShape EntityType="SalesProjectNetDBModel.system_logs" Width="1.5" PointX="0.75" PointY="8.75" />
+        <AssociationConnector Association="SalesProjectNetDBModel.FK__system_lo__user___5DCAEF64" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

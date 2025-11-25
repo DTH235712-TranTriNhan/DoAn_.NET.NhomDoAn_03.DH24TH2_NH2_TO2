@@ -109,6 +109,17 @@ CREATE TABLE shipping_info (
 );
 GO
 
+-- Log ghi thao tác người dùng
+CREATE TABLE system_logs (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    user_id INT, -- Ai làm? (Liên kết với bảng users)
+    action_type NVARCHAR(50), -- Hành động gì? (LOGIN, ADD, EDIT, DELETE)
+    description NVARCHAR(MAX), -- Chi tiết (Ví dụ: Xóa bánh bông lan)
+    created_at DATETIME DEFAULT GETDATE(), -- Lúc nào?
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+GO
+
 -- =================================================================
 -- INSERT DỮ LIỆU MẪU
 -- =================================================================

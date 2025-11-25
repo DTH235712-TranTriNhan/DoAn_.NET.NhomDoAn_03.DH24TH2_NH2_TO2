@@ -147,6 +147,7 @@ namespace SalesProjectApp.Forms.Auth
                     if (user != null)
                     {
                         Session.CurrentUser = user;
+                        LogHelper.Write("LOGIN", $"Người dùng {user.username} đã đăng nhập vào hệ thống.");
                         MessageBox.Show($"Đăng nhập thành công! Xin chào {user.full_name}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         // Mở form chính (Đã bỏ comment để chạy được)

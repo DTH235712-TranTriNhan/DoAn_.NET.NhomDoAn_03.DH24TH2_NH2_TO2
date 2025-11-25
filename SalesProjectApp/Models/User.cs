@@ -18,6 +18,7 @@ namespace SalesProjectApp.Models
         public user()
         {
             this.orders = new HashSet<order>();
+            this.system_logs = new HashSet<system_logs>();
         }
     
         public int id { get; set; }
@@ -31,5 +32,7 @@ namespace SalesProjectApp.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<order> orders { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<system_logs> system_logs { get; set; }
     }
 }

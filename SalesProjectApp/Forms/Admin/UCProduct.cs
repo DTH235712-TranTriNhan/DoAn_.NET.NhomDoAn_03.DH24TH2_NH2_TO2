@@ -178,9 +178,10 @@ namespace SalesProjectApp.Forms.Admin
                     var p = db.products.Find(id);
                     if (p != null)
                     {
+                        string tenMon = p.name;
                         p.is_active = false;
                         db.SaveChanges();
-                        MessageBox.Show("Đã xóa thành công!", "Thông báo");
+                        LogHelper.Write("DELETE PRODUCT", $"Đã xóa món ăn: {tenMon} (ID: {id})");
                         LoadProductData();
                     }
                 }
