@@ -61,8 +61,8 @@
             // 
             // pnlCard
             // 
-            this.pnlCard.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.pnlCard.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlCard.BackColor = System.Drawing.Color.White;
             this.pnlCard.Controls.Add(this.dgvCustomer);
@@ -74,6 +74,9 @@
             // dgvCustomer
             // 
             this.dgvCustomer.AllowUserToAddRows = false;
+            // --- THÊM DÒNG NÀY ĐỂ BẢNG TỰ CO DÃN TẤT CẢ CỘT ---
+            this.dgvCustomer.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            // -------------------------------------------------
             this.dgvCustomer.BackgroundColor = System.Drawing.Color.White;
             this.dgvCustomer.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvCustomer.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
@@ -126,25 +129,21 @@
             this.colName.HeaderText = "HỌ TÊN";
             this.colName.MinimumWidth = 6;
             this.colName.Name = "colName";
-            this.colName.Width = 180;
             // 
             // colPhone
             // 
             this.colPhone.HeaderText = "SĐT";
             this.colPhone.MinimumWidth = 6;
             this.colPhone.Name = "colPhone";
-            this.colPhone.Width = 120;
             // 
             // colEmail
             // 
             this.colEmail.HeaderText = "EMAIL";
             this.colEmail.MinimumWidth = 6;
             this.colEmail.Name = "colEmail";
-            this.colEmail.Width = 180;
             // 
             // colAddress
             // 
-            this.colAddress.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.colAddress.HeaderText = "ĐỊA CHỈ";
             this.colAddress.MinimumWidth = 6;
             this.colAddress.Name = "colAddress";

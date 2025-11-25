@@ -2,7 +2,7 @@
 
 namespace SalesProjectApp.Forms.Admin
 {
-    partial class UCProduct
+    partial class UCCategory
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -23,31 +23,25 @@ namespace SalesProjectApp.Forms.Admin
             this.lblTitle = new System.Windows.Forms.Label();
             this.pnlLine = new System.Windows.Forms.Panel();
             this.pnlCard = new System.Windows.Forms.Panel();
-            this.dgvProduct = new System.Windows.Forms.DataGridView();
+            this.dgvCategory = new System.Windows.Forms.DataGridView();
 
-            // Các control mới cho Tìm kiếm & Lọc
-            this.txtSearch = new System.Windows.Forms.TextBox();
-            this.cboFilter = new System.Windows.Forms.ComboBox();
-
-            // --- SỬ DỤNG NÚT BO TRÒN RJBUTTON ---
+            // --- SỬ DỤNG NÚT BO TRÒN ---
             this.btnAdd = new SalesProjectApp.Controls.RJButton();
-            // ------------------------------------
+            // ---------------------------
 
-            // Khai báo cột
-            this.colImg = new System.Windows.Forms.DataGridViewImageColumn();
+            // Cột
+            this.colID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colCategory = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAction = new System.Windows.Forms.DataGridViewButtonColumn();
 
             // Menu chuột phải
             this.cmsAction = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsmiView = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiDelete = new System.Windows.Forms.ToolStripMenuItem();
 
             this.pnlCard.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvProduct)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvCategory)).BeginInit();
             this.cmsAction.SuspendLayout();
             this.SuspendLayout();
 
@@ -59,9 +53,9 @@ namespace SalesProjectApp.Forms.Admin
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.lblTitle.Location = new System.Drawing.Point(30, 20);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(342, 46);
+            this.lblTitle.Size = new System.Drawing.Size(315, 46);
             this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = "Danh sách sản phẩm";
+            this.lblTitle.Text = "Quản lý Danh mục";
 
             // 
             // pnlLine
@@ -73,13 +67,13 @@ namespace SalesProjectApp.Forms.Admin
             this.pnlLine.TabIndex = 1;
 
             // 
-            // btnAdd (NÚT BO TRÒN + ICON)
+            // btnAdd (NÚT BO TRÒN)
             // 
             this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(30)))), ((int)(((byte)(99)))));
             this.btnAdd.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(30)))), ((int)(((byte)(99)))));
             this.btnAdd.BorderColor = System.Drawing.Color.PaleVioletRed;
-            this.btnAdd.BorderRadius = 20; // Độ bo tròn
+            this.btnAdd.BorderRadius = 20;
             this.btnAdd.BorderSize = 0;
             this.btnAdd.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnAdd.FlatAppearance.BorderSize = 0;
@@ -87,37 +81,19 @@ namespace SalesProjectApp.Forms.Admin
             this.btnAdd.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnAdd.ForeColor = System.Drawing.Color.White;
 
-            // Thêm Icon FontAwesome
+            // Icon FontAwesome
             this.btnAdd.Image = FontAwesome.Sharp.IconChar.PlusCircle.ToBitmap(System.Drawing.Color.White, 24);
             this.btnAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnAdd.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0); // Căn lề icon
+            this.btnAdd.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnAdd.TextColor = System.Drawing.Color.White;
 
-            this.btnAdd.Location = new System.Drawing.Point(740, 30);
+            this.btnAdd.Location = new System.Drawing.Point(740, 25);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(180, 40);
             this.btnAdd.TabIndex = 2;
-            this.btnAdd.Text = "   Thêm món mới"; // Thêm khoảng trắng để cách icon
+            this.btnAdd.Text = "   Thêm danh mục";
             this.btnAdd.UseVisualStyleBackColor = false;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
-
-            // --- TextBox Tìm kiếm ---
-            this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtSearch.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.txtSearch.Location = new System.Drawing.Point(530, 35);
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(200, 32);
-            this.txtSearch.TabIndex = 4;
-            // 
-            // --- ComboBox Lọc ---
-            this.cboFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cboFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboFilter.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.cboFilter.FormattingEnabled = true;
-            this.cboFilter.Location = new System.Drawing.Point(360, 34);
-            this.cboFilter.Name = "cboFilter";
-            this.cboFilter.Size = new System.Drawing.Size(160, 33);
-            this.cboFilter.TabIndex = 5;
 
             // 
             // pnlCard
@@ -126,21 +102,21 @@ namespace SalesProjectApp.Forms.Admin
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlCard.BackColor = System.Drawing.Color.White;
-            this.pnlCard.Controls.Add(this.dgvProduct);
+            this.pnlCard.Controls.Add(this.dgvCategory);
             this.pnlCard.Location = new System.Drawing.Point(30, 100);
             this.pnlCard.Name = "pnlCard";
             this.pnlCard.Size = new System.Drawing.Size(890, 620);
             this.pnlCard.TabIndex = 3;
 
             // 
-            // dgvProduct
+            // dgvCategory
             // 
-            this.dgvProduct.AllowUserToAddRows = false;
-            this.dgvProduct.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvProduct.BackgroundColor = System.Drawing.Color.White;
-            this.dgvProduct.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dgvProduct.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            this.dgvProduct.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.dgvCategory.AllowUserToAddRows = false;
+            this.dgvCategory.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvCategory.BackgroundColor = System.Drawing.Color.White;
+            this.dgvCategory.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dgvCategory.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+            this.dgvCategory.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
 
             headerStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             headerStyle.BackColor = System.Drawing.Color.White;
@@ -149,14 +125,13 @@ namespace SalesProjectApp.Forms.Admin
             headerStyle.SelectionBackColor = System.Drawing.Color.White;
             headerStyle.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             headerStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvProduct.ColumnHeadersDefaultCellStyle = headerStyle;
-            this.dgvProduct.ColumnHeadersHeight = 50;
+            this.dgvCategory.ColumnHeadersDefaultCellStyle = headerStyle;
+            this.dgvCategory.ColumnHeadersHeight = 50;
 
-            this.dgvProduct.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colImg,
+            this.dgvCategory.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colID,
             this.colName,
-            this.colCategory,
-            this.colPrice,
+            this.colCode,
             this.colAction});
 
             rowStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -167,74 +142,80 @@ namespace SalesProjectApp.Forms.Admin
             rowStyle.SelectionBackColor = System.Drawing.Color.WhiteSmoke;
             rowStyle.SelectionForeColor = System.Drawing.Color.Black;
             rowStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvProduct.DefaultCellStyle = rowStyle;
+            this.dgvCategory.DefaultCellStyle = rowStyle;
 
-            this.dgvProduct.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvProduct.EnableHeadersVisualStyles = false;
-            this.dgvProduct.Location = new System.Drawing.Point(0, 0);
-            this.dgvProduct.Name = "dgvProduct";
-            this.dgvProduct.RowHeadersVisible = false;
-            this.dgvProduct.RowHeadersWidth = 51;
-            this.dgvProduct.RowTemplate.Height = 60;
-            this.dgvProduct.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvProduct.Size = new System.Drawing.Size(890, 620);
-            this.dgvProduct.TabIndex = 0;
-            this.dgvProduct.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProduct_CellContentClick);
+            this.dgvCategory.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvCategory.EnableHeadersVisualStyles = false;
+            this.dgvCategory.Location = new System.Drawing.Point(0, 0);
+            this.dgvCategory.Name = "dgvCategory";
+            this.dgvCategory.RowHeadersVisible = false;
+            this.dgvCategory.RowHeadersWidth = 51;
+            this.dgvCategory.RowTemplate.Height = 50;
+            this.dgvCategory.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvCategory.Size = new System.Drawing.Size(890, 620);
+            this.dgvCategory.TabIndex = 0;
+            this.dgvCategory.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvCategory_CellContentClick);
 
-            // Cấu hình các cột
-            this.colImg.HeaderText = "HÌNH ẢNH";
-            this.colImg.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
-            this.colImg.Name = "colImg";
-
-            this.colName.HeaderText = "TÊN BÁNH";
+            // 
+            // colID
+            // 
+            this.colID.HeaderText = "ID";
+            this.colID.MinimumWidth = 6;
+            this.colID.Name = "colID";
+            // 
+            // colName
+            // 
+            this.colName.HeaderText = "TÊN DANH MỤC";
+            this.colName.MinimumWidth = 6;
             this.colName.Name = "colName";
-
-            this.colCategory.HeaderText = "DANH MỤC";
-            this.colCategory.Name = "colCategory";
-
-            this.colPrice.HeaderText = "GIÁ BÁN";
-            this.colPrice.Name = "colPrice";
-
+            // 
+            // colCode
+            // 
+            this.colCode.HeaderText = "MÃ CODE";
+            this.colCode.MinimumWidth = 6;
+            this.colCode.Name = "colCode";
+            // 
+            // colAction
+            // 
             this.colAction.HeaderText = "HÀNH ĐỘNG";
+            this.colAction.MinimumWidth = 6;
             this.colAction.Name = "colAction";
             this.colAction.Text = "...";
             this.colAction.UseColumnTextForButtonValue = true;
 
-            // Menu ngữ cảnh
+            // 
+            // cmsAction
+            // 
+            this.cmsAction.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.cmsAction.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiView,
             this.tsmiEdit,
             this.tsmiDelete});
             this.cmsAction.Name = "cmsAction";
-            this.cmsAction.Size = new System.Drawing.Size(105, 76);
+            this.cmsAction.Size = new System.Drawing.Size(105, 52);
 
-            this.tsmiView.Name = "tsmiView";
-            this.tsmiView.Text = "👁️ Xem chi tiết";
-            this.tsmiView.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-
+            // tsmiEdit
             this.tsmiEdit.Name = "tsmiEdit";
+            this.tsmiEdit.Size = new System.Drawing.Size(104, 24);
             this.tsmiEdit.Text = "✏️ Sửa";
 
-            this.tsmiDelete.Name = "tsmiDelete";
-            this.tsmiDelete.Text = "🗑️ Xóa";
+            // tsmiDelete
             this.tsmiDelete.ForeColor = System.Drawing.Color.Red;
+            this.tsmiDelete.Name = "tsmiDelete";
+            this.tsmiDelete.Size = new System.Drawing.Size(104, 24);
+            this.tsmiDelete.Text = "🗑️ Xóa";
 
-            // 
-            // UCProduct
-            // 
+            // Main
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.Controls.Add(this.cboFilter);
-            this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.pnlCard);
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.pnlLine);
             this.Controls.Add(this.lblTitle);
-            this.Name = "UCProduct";
+            this.Name = "UCCategory";
             this.Size = new System.Drawing.Size(950, 750);
             this.pnlCard.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvProduct)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvCategory)).EndInit();
             this.cmsAction.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -244,22 +225,15 @@ namespace SalesProjectApp.Forms.Admin
 
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Panel pnlLine;
-
-        // Dùng RJButton thay vì Button thường
-        private SalesProjectApp.Controls.RJButton btnAdd;
-
+        private SalesProjectApp.Controls.RJButton btnAdd; // Nút bo tròn
         private System.Windows.Forms.Panel pnlCard;
-        private System.Windows.Forms.DataGridView dgvProduct;
-        private System.Windows.Forms.DataGridViewImageColumn colImg;
+        private System.Windows.Forms.DataGridView dgvCategory;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colID;
         private System.Windows.Forms.DataGridViewTextBoxColumn colName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colCategory;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colPrice;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCode;
         private System.Windows.Forms.DataGridViewButtonColumn colAction;
         private System.Windows.Forms.ContextMenuStrip cmsAction;
         private System.Windows.Forms.ToolStripMenuItem tsmiEdit;
         private System.Windows.Forms.ToolStripMenuItem tsmiDelete;
-        private System.Windows.Forms.ToolStripMenuItem tsmiView;
-        private System.Windows.Forms.TextBox txtSearch;
-        private System.Windows.Forms.ComboBox cboFilter;
     }
 }
