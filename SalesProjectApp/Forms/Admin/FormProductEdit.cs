@@ -114,7 +114,7 @@ namespace SalesProjectApp.Forms.Admin
 
                     db.SaveChanges();
                     string action = _productId == 0 ? "ADD PRODUCT" : "EDIT PRODUCT";
-                    LogHelper.Write(action, $"Đã lưu thông tin món: {txtName.Text}");
+                    LogHelper.Write(action, $"Sản phẩm: {txtName.Text} - Giá: {txtPrice.Text}");
                     this.Close();
                 }
             }
