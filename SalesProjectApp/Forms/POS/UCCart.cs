@@ -1,26 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing; // Thư viện để vẽ giao diện, màu sắc
 using System.Linq;
 using System.Windows.Forms;
-using SalesProjectApp.Models; // Đảm bảo các models (order, order_details...) có sẵn
+using SalesProjectApp.Models;
 
 namespace SalesProjectApp.Forms
 {
     public partial class UCCart : UserControl
     {
-        // ----------------------------------------------------
-        // 1. KHAI BÁO EVENTS CHO POSFORM ĐĂNG KÝ
-        // ----------------------------------------------------
-
-        // Delegate cho sự kiện cập nhật Giỏ hàng (Truyền tổng số lượng món)
+        // Định nghĩa các Event
         public delegate void CartUpdateHandler(int totalItems);
         public event CartUpdateHandler OnCartUpdated;
-
-        // Sự kiện Thanh toán hoàn tất (Sử dụng chuẩn EventHandler)
         public event EventHandler OnCheckoutCompleted;
 
-        // ----------------------------------------------------
-
+        // Class lưu trữ tạm thông tin giỏ hàng
         private class CartItem
         {
             public string ProductName { get; set; }
@@ -28,6 +22,9 @@ namespace SalesProjectApp.Forms
             public int Quantity { get; set; }
             public string Note { get; set; }
             public decimal Total => Price * Quantity;
+
+            // Giả lập ảnh (bạn có thể thay bằng đường dẫn ảnh thực tế từ DB)
+            public Image ProductImage { get; set; }
         }
 
         private List<CartItem> _cartItems = new List<CartItem>();
@@ -35,17 +32,54 @@ namespace SalesProjectApp.Forms
         public UCCart()
         {
             InitializeComponent();
-            // Gán sự kiện cho nút Thanh toán
+            SetupModernUI(); // <--- Gọi hàm làm đẹp giao diện
+
+            // Gán sự kiện
             btnPay.Click += btnPay_Click;
-            // Gán sự kiện cho DataGridView
             dgvCart.CellContentClick += dgvCart_CellContentClick;
 
-            // Giả định: UIHelper.StyleDataGridView(dgvCart);
+            // Khởi tạo
+            UpdateCartTotal(0);
         }
 
-        public void AddToCart(string name, decimal price, int qty, string note = "")
+        // --- PHẦN CUSTOM GIAO DIỆN (Làm đẹp) ---
+        private void SetupModernUI()
         {
-            // Cộng dồn nếu cùng tên và cùng ghi chú
+            // 1. Cài đặt DataGridView giống danh sách (List)
+            dgvCart.BackgroundColor = Color.White;
+            dgvCart.BorderStyle = BorderStyle.None;
+            dgvCart.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgvCart.GridColor = Color.FromArgb(230, 230, 230); // Đường kẻ mờ
+
+            dgvCart.ColumnHeadersVisible = false; // Ẩn tiêu đề cột để giống App
+            dgvCart.RowHeadersVisible = false;
+
+            dgvCart.RowTemplate.Height = 100; // Chiều cao dòng lớn để chứa ảnh
+            dgvCart.DefaultCellStyle.SelectionBackColor = Color.White; // Bỏ màu xanh khi chọn
+            dgvCart.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvCart.DefaultCellStyle.Font = new Font("Segoe UI", 10F);
+            dgvCart.DefaultCellStyle.WrapMode = DataGridViewTriState.True; // Cho phép xuống dòng
+
+            // 2. Panel Tổng tiền & Nút
+            pnlTotal.BackColor = Color.White;
+            // Vẽ đường viền trên panel tổng tiền
+            pnlTotal.Paint += (s, e) => {
+                e.Graphics.DrawLine(new Pen(Color.LightGray), 0, 0, pnlTotal.Width, 0);
+            };
+
+            // 3. Nút Thanh toán (Màu đỏ cam nổi bật)
+            btnPay.BackColor = Color.FromArgb(238, 77, 45);
+            btnPay.ForeColor = Color.White;
+            btnPay.FlatStyle = FlatStyle.Flat;
+            btnPay.FlatAppearance.BorderSize = 0;
+            btnPay.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            btnPay.Cursor = Cursors.Hand;
+        }
+
+        // --- LOGIC GIỎ HÀNG ---
+
+        public void AddToCart(string name, decimal price, int qty = 1, string note = "", Image productImg = null)
+        {
             var exist = _cartItems.FirstOrDefault(x => x.ProductName == name && x.Note == note);
             if (exist != null)
             {
@@ -53,8 +87,24 @@ namespace SalesProjectApp.Forms
             }
             else
             {
-                _cartItems.Add(new CartItem { ProductName = name, Price = price, Quantity = qty, Note = note });
+                // Nếu không truyền ảnh vào thì mới dùng ảnh xám mặc định
+                Image finalImg = productImg;
+                if (finalImg == null)
+                {
+                    finalImg = new Bitmap(80, 80);
+                    using (Graphics g = Graphics.FromImage(finalImg)) { g.Clear(Color.LightGray); }
+                }
+
+                _cartItems.Add(new CartItem
+                {
+                    ProductName = name,
+                    Price = price,
+                    Quantity = qty,
+                    Note = note,
+                    ProductImage = finalImg // Lưu ảnh thật vào đây
+                });
             }
+
             ReloadCartGrid();
         }
 
@@ -65,30 +115,65 @@ namespace SalesProjectApp.Forms
 
             foreach (var item in _cartItems)
             {
+                // Tạo chuỗi tên hiển thị
                 string displayName = item.ProductName;
-                // Hiển thị ghi chú nếu có
-                if (!string.IsNullOrEmpty(item.Note)) displayName += $"\n({item.Note})";
+                string displayNote = string.IsNullOrEmpty(item.Note) ? "" : $"\nNote: {item.Note}";
 
-                // Giả sử các cột: Tên món, Số lượng, Giá, Tổng, Xóa
-                dgvCart.Rows.Add(displayName, item.Quantity, item.Price.ToString("N0"), item.Total.ToString("N0"), "X");
+                // Add dòng vào Grid
+                // Thứ tự: [0]Ảnh, [1]Tên+Note, [2]SL, [3]Thành tiền, [4]Nút Xóa
+                int index = dgvCart.Rows.Add(
+                    item.ProductImage,
+                    displayName + displayNote,
+                    $"x{item.Quantity}",
+                    item.Total.ToString("N0") + "đ",
+                    "✕" // Ký tự nút xóa
+                );
+
                 grandTotal += item.Total;
-            }
-            lblTotalVal.Text = grandTotal.ToString("N0") + "đ";
 
-            // *** KÍCH HOẠT EVENT CẬP NHẬT GIỎ HÀNG ***
+                // --- Format từng dòng cho đẹp ---
+                var row = dgvCart.Rows[index];
+
+                // Tên món: Font đậm
+                row.Cells[1].Style.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+                row.Cells[1].Style.Padding = new Padding(5, 10, 0, 0); // Căn lề
+
+                // Thành tiền: Màu đỏ cam
+                row.Cells[3].Style.ForeColor = Color.FromArgb(238, 77, 45);
+                row.Cells[3].Style.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+
+                // Nút Xóa: Màu xám nhạt
+                row.Cells[4].Style.ForeColor = Color.Gray;
+                row.Cells[4].Style.Font = new Font("Arial", 12F);
+            }
+
+            // Cập nhật Label Tổng tiền
+            lblTotalVal.Text = grandTotal.ToString("N0") + "đ";
+            lblTotalVal.ForeColor = Color.FromArgb(238, 77, 45); // Màu đỏ cam
+
+            // Update event ra ngoài
             int totalItems = _cartItems.Sum(x => x.Quantity);
+            UpdateCartTotal(totalItems);
+        }
+
+        private void UpdateCartTotal(int totalItems)
+        {
             OnCartUpdated?.Invoke(totalItems);
+        }
+
+        private void ResetCart()
+        {
+            _cartItems.Clear();
+            ReloadCartGrid();
         }
 
         private void btnPay_Click(object sender, EventArgs e)
         {
-            if (_cartItems.Count == 0) { MessageBox.Show("Giỏ hàng trống!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
-            if (Session.CurrentUser == null) { MessageBox.Show("Vui lòng đăng nhập để đặt hàng!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+            if (_cartItems.Count == 0) { MessageBox.Show("Giỏ hàng trống!"); return; }
+            if (Session.CurrentUser == null) { MessageBox.Show("Vui lòng đăng nhập!"); return; }
 
-            if (MessageBox.Show("Xác nhận đặt hàng và thanh toán?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-            {
+            if (MessageBox.Show("Xác nhận đặt đơn hàng này?", "Thanh toán", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 return;
-            }
 
             try
             {
@@ -103,62 +188,44 @@ namespace SalesProjectApp.Forms
                         payment_method = "Tiền mặt"
                     };
                     db.orders.Add(order);
-                    db.SaveChanges(); // Lưu để lấy order.id
+                    db.SaveChanges();
 
-                    // Thêm chi tiết đơn hàng
                     foreach (var item in _cartItems)
                     {
                         var prod = db.products.FirstOrDefault(p => p.name == item.ProductName);
-                        if (prod != null)
-                        {
-                            db.order_details.Add(new order_details
-                            {
-                                order_id = order.id,
-                                product_id = prod.id,
-                                quantity = item.Quantity,
-                                unit_price = item.Price
-                            });
-                        }
-                    }
+                        if (prod == null) continue;
 
-                    // Lưu Ghi chú/Shipping (nếu cần)
-                    var notes = string.Join("; ", _cartItems.Where(x => !string.IsNullOrEmpty(x.Note)).Select(x => $"{x.ProductName}: {x.Note}"));
-                    if (!string.IsNullOrEmpty(notes))
-                    {
-                        // Giả định: shipping_info tồn tại
-                        db.shipping_info.Add(new shipping_info
+                        db.order_details.Add(new order_details
                         {
                             order_id = order.id,
-                            recipient_name = Session.CurrentUser.full_name,
-                            phone_number = Session.CurrentUser.phone_number ?? "",
-                            address = "Tại cửa hàng",
-                            notes = notes
+                            product_id = prod.id,
+                            quantity = item.Quantity,
+                            unit_price = item.Price
                         });
                     }
-
                     db.SaveChanges();
 
-                    MessageBox.Show("Đặt hàng thành công! Vui lòng theo dõi trạng thái tại mục Lịch Sử.", "Thành công");
-                    _cartItems.Clear();
-                    ReloadCartGrid(); // Reload giỏ hàng trống
-
-                    // *** KÍCH HOẠT EVENT THANH TOÁN HOÀN TẤT ***
+                    MessageBox.Show("Đặt hàng thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ResetCart();
                     OnCheckoutCompleted?.Invoke(this, EventArgs.Empty);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi lưu đơn hàng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Lỗi thanh toán: " + ex.Message);
             }
         }
 
         private void dgvCart_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Xóa món (Cột nút xóa là cột cuối cùng index 4)
+            // Xử lý nút Xóa (Cột index 4)
             if (e.RowIndex >= 0 && e.ColumnIndex == 4)
             {
-                _cartItems.RemoveAt(e.RowIndex);
-                ReloadCartGrid();
+                if (MessageBox.Show("Bạn muốn xóa món này?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    _cartItems.RemoveAt(e.RowIndex);
+                    ReloadCartGrid();
+                }
             }
         }
     }

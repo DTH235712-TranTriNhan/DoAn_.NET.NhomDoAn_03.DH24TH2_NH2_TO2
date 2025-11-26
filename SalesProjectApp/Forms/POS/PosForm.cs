@@ -61,15 +61,23 @@ namespace SalesProjectApp.Forms
             // Khởi tạo Giỏ hàng (UserControl)
             ucCart = new UCCart();
             ucCart.Dock = DockStyle.Fill;
+            ucCart.OnCartUpdated += (total) => { btnCart.Text = $"Giỏ hàng ({total})"; };
+            ucCart.OnCheckoutCompleted += (s, e) => { pnlRight.Visible = false; };
             ucCart.BackColor = Color.White;
             pnlRight.Controls.Clear();
             pnlRight.Controls.Add(ucCart);
+
+            // Mặc định ẩn Lịch sử đơn, hiện Menu
+            ucOrderHistory.Visible = false;
+            flpMenu.Visible = true;
+            ucBanner.Visible = true;
+            flpCategory.Visible = true;
 
             // Sự kiện tìm kiếm
             txtSearch.TextChanged += (s, e) => LoadMenu(_currentCategory);
 
             // Sự kiện Resize để tính lại cột sản phẩm khi phóng to/thu nhỏ
-            this.Resize += (s, e) => LoadMenu(_currentCategory);
+            this.Resize += (s, e) => FixHeaderLayout();
 
             this.Load += new EventHandler(PosForm_Load);
         }
@@ -80,6 +88,7 @@ namespace SalesProjectApp.Forms
             LoadCategoryTabs();
             LoadMenu("Tất cả");
             UpdateUserInterface(); // Cập nhật nút Login/Profile
+            FixHeaderLayout();
         }
 
         // --- 1. XỬ LÝ NGƯỜI DÙNG (ĐĂNG NHẬP / PROFILE) ---
@@ -101,7 +110,7 @@ namespace SalesProjectApp.Forms
             }
         }
 
-        // Sự kiện nút Profile trong Sidebar (nếu có)
+        // Sự kiện nút Profile trong Sidebar
         private void btnProfile_Click(object sender, EventArgs e)
         {
             if (Session.CurrentUser == null)
@@ -111,7 +120,10 @@ namespace SalesProjectApp.Forms
             }
             else
             {
-                cmsUser.Show(btnProfile, new Point(0, btnProfile.Height));
+                // Mở form thông tin cá nhân
+                FormUserProfile frm = new FormUserProfile();
+                frm.ShowDialog();
+                UpdateUserInterface();
             }
         }
 
@@ -123,7 +135,6 @@ namespace SalesProjectApp.Forms
                 btnLogin.Image = IconChar.UserCheck.ToBitmap(Color.LimeGreen, 24);
 
                 // Cập nhật nút Profile trong Sidebar
-                // Kiểm tra null để tránh lỗi nếu nút chưa được khởi tạo
                 if (btnProfile != null)
                 {
                     btnProfile.Text = "👤 " + Session.CurrentUser.full_name;
@@ -167,12 +178,14 @@ namespace SalesProjectApp.Forms
                     Session.CurrentUser = null;
                     UpdateUserInterface();
                     MessageBox.Show("Đã đăng xuất!", "Thông báo");
+
+                    // Reset về trang chủ
+                    btnMenu_Click(null, null);
                 }
             }
         }
 
         // --- 2. XỬ LÝ ĐỒNG HỒ ---
-        // Hàm này để sửa lỗi CS1061 trong Designer
         private void timerClock_Tick(object sender, EventArgs e)
         {
             if (lblClock != null)
@@ -186,7 +199,6 @@ namespace SalesProjectApp.Forms
         {
             flpCategory.Controls.Clear();
             var categories = new List<string> { "Tất cả" };
-            // Lấy danh sách danh mục duy nhất từ list sản phẩm
             categories.AddRange(allProducts.Select(p => p.Category).Distinct());
 
             foreach (var cat in categories)
@@ -202,17 +214,14 @@ namespace SalesProjectApp.Forms
                     BorderSize = 0
                 };
 
-                // Màu sắc: Tất cả (Đen), Khác (Trắng)
                 if (cat == "Tất cả") { btn.BackColor = Color.Black; btn.ForeColor = Color.White; }
                 else { btn.BackColor = Color.White; btn.ForeColor = Color.DimGray; }
 
                 btn.Click += (s, e) =>
                 {
-                    // Reset màu các nút khác
                     foreach (Control c in flpCategory.Controls)
                         if (c is RJButton b) { b.BackColor = Color.White; b.ForeColor = Color.DimGray; }
 
-                    // Highlight nút chọn
                     btn.BackColor = Color.Black;
                     btn.ForeColor = Color.White;
 
@@ -229,49 +238,42 @@ namespace SalesProjectApp.Forms
         {
             flpMenu.Controls.Clear();
 
-            // Lọc theo danh mục
             var list = (category == "Tất cả") ? allProducts : allProducts.Where(p => p.Category == category).ToList();
 
-            // Lọc theo từ khóa tìm kiếm
             string keyword = txtSearch.Text.Trim().ToLower();
             if (!string.IsNullOrEmpty(keyword))
             {
                 list = list.Where(p => p.Name.ToLower().Contains(keyword)).ToList();
             }
 
-            // Tạo thẻ sản phẩm
             foreach (var p in list) CreateProductCard(p);
         }
 
         private void CreateProductCard(Product p)
         {
-            // Tính toán Responsive (Tự động chia cột)
-            // Lấy chiều rộng thực tế của vùng chứa menu
-            int containerWidth = flpMenu.ClientSize.Width;
-            if (containerWidth == 0) containerWidth = this.Width - 250; // Fallback nếu chưa load xong
+            // Tính toán Responsive dựa trên pnlMainContainer
+            int containerWidth = pnlMainContainer.Width;
+            if (containerWidth == 0) containerWidth = Screen.PrimaryScreen.Bounds.Width;
 
-            // Trừ padding và scrollbar
-            int availableWidth = containerWidth - 40;
+            int scrollBarWidth = SystemInformation.VerticalScrollBarWidth;
+            int availableWidth = containerWidth - scrollBarWidth - 60;
 
-            // Logic chia cột: Màn hình to thì 4-5 cột, nhỏ thì 3 cột
             int colCount = 3;
-            if (availableWidth > 1200) colCount = 5;
-            else if (availableWidth > 900) colCount = 4;
+            if (availableWidth > 1400) colCount = 5;
+            else if (availableWidth > 1100) colCount = 4;
 
-            int cardWidth = (availableWidth / colCount) - 15; // Trừ margin giữa các thẻ
+            int cardWidth = (availableWidth / colCount) - 15;
             int cardHeight = 280;
 
-            // Panel Thẻ
             Panel pnl = new Panel();
             pnl.Size = new Size(cardWidth, cardHeight);
             pnl.BackColor = Color.White;
             pnl.Margin = new Padding(7);
             pnl.Cursor = Cursors.Hand;
 
-            // Vẽ viền nhẹ
-            pnl.Paint += (s, e) => { ControlPaint.DrawBorder(e.Graphics, pnl.ClientRectangle, Color.LightGray, ButtonBorderStyle.Solid); };
-
-            // Bo tròn góc thẻ
+            pnl.Paint += (s, e) => {
+                ControlPaint.DrawBorder(e.Graphics, pnl.ClientRectangle, Color.LightGray, ButtonBorderStyle.Solid);
+            };
             try { pnl.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, cardWidth, cardHeight, 15, 15)); } catch { }
 
             // Sự kiện Click -> Mở chi tiết
@@ -280,16 +282,13 @@ namespace SalesProjectApp.Forms
                 ProductDetailForm frm = new ProductDetailForm(p.Name, p.Price, p.Img, p.Description);
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
-                    // Thêm vào giỏ (Truyền Tên, Giá, SL, Ghi chú)
                     ucCart.AddToCart(p.Name, p.Price, frm.SelectedQty, frm.Note);
-
                     UpdateCartCount(frm.SelectedQty);
                 }
             };
-
             pnl.Click += clickEvent;
 
-            // Ảnh sản phẩm
+            // Ảnh
             PictureBox pb = new PictureBox();
             pb.Image = p.Img;
             pb.SizeMode = PictureBoxSizeMode.Zoom;
@@ -297,20 +296,20 @@ namespace SalesProjectApp.Forms
             pb.Location = new Point(10, 10);
             pb.Click += clickEvent;
 
-            // Tên món
+            // Tên
             Label lblName = new Label();
             lblName.Text = p.Name;
             lblName.Font = new Font("Segoe UI", 11, FontStyle.Bold);
             lblName.ForeColor = Color.FromArgb(64, 64, 64);
             lblName.TextAlign = ContentAlignment.TopCenter;
-            lblName.Size = new Size(cardWidth - 10, 45);
+            lblName.Size = new Size(cardWidth - 10, 50);
             lblName.Location = new Point(5, 165);
             lblName.Click += clickEvent;
 
-            // Giá tiền
+            // Giá
             Label lblPrice = new Label();
             lblPrice.Text = p.Price.ToString("N0") + "đ";
-            lblPrice.ForeColor = Color.FromArgb(233, 30, 99); // Màu hồng
+            lblPrice.ForeColor = Color.FromArgb(233, 30, 99);
             lblPrice.Font = new Font("Segoe UI", 13, FontStyle.Bold);
             lblPrice.TextAlign = ContentAlignment.MiddleCenter;
             lblPrice.Size = new Size(cardWidth - 10, 30);
@@ -320,6 +319,7 @@ namespace SalesProjectApp.Forms
             pnl.Controls.Add(pb);
             pnl.Controls.Add(lblName);
             pnl.Controls.Add(lblPrice);
+
             flpMenu.Controls.Add(pnl);
         }
 
@@ -328,12 +328,10 @@ namespace SalesProjectApp.Forms
         {
             _totalItemsInCart += quantityToAdd;
             btnCart.Text = $"   Giỏ hàng ({_totalItemsInCart})";
-
-            // Hiệu ứng nháy màu xanh lá
             btnCart.BackColor = Color.LimeGreen;
             Timer t = new Timer { Interval = 300 };
             t.Tick += (ss, ee) => {
-                btnCart.BackColor = Color.FromArgb(233, 30, 99); // Trả về màu hồng
+                btnCart.BackColor = Color.FromArgb(233, 30, 99);
                 t.Stop();
             };
             t.Start();
@@ -342,11 +340,9 @@ namespace SalesProjectApp.Forms
         private void btnCart_Click(object sender, EventArgs e)
         {
             pnlRight.Visible = !pnlRight.Visible;
-            // Resize lại menu để tính toán lại cột khi panel phải hiện ra/ẩn đi
-            LoadMenu(_currentCategory);
+            LoadMenu(_currentCategory); // Resize lại lưới sản phẩm
         }
 
-        // --- 6. TÌM KIẾM ---
         private void btnSearch_Click(object sender, EventArgs e)
         {
             txtSearch.Visible = !txtSearch.Visible;
@@ -354,18 +350,11 @@ namespace SalesProjectApp.Forms
             else { txtSearch.Text = ""; LoadMenu(_currentCategory); }
         }
 
-        // --- 7. CÁC HÀM TIỆN ÍCH ---
+        // --- CÁC HÀM HỖ TRỢ ---
         private Image LoadImageSafe(string path)
         {
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return SystemIcons.Application.ToBitmap();
-            try
-            {
-                // Đọc file vào Memory để không bị khóa file ảnh (File Lock)
-                using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                {
-                    return Image.FromStream(fs);
-                }
-            }
+            try { using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read)) { return Image.FromStream(fs); } }
             catch { return SystemIcons.Application.ToBitmap(); }
         }
 
@@ -373,7 +362,6 @@ namespace SalesProjectApp.Forms
         {
             using (var db = new SalesProjectNetDBEntities())
             {
-                // Lấy dữ liệu thô từ DB
                 var productDataFromDb = db.products.Where(p => p.is_active == true)
                     .Select(p => new {
                         Name = p.name,
@@ -383,7 +371,6 @@ namespace SalesProjectApp.Forms
                         ImagePath = p.image
                     }).ToList();
 
-                // Chuyển đổi sang List<Product> của Form
                 allProducts = productDataFromDb.Select(p => new Product
                 {
                     Name = p.Name,
@@ -395,28 +382,60 @@ namespace SalesProjectApp.Forms
             }
         }
 
-        // Các nút điều hướng khác
         private void btnBack_Click(object sender, EventArgs e) { this.Close(); }
 
-        // Nếu có nút Menu, History trong Sidebar
+        // Navigation Sidebar
         private void btnMenu_Click(object sender, EventArgs e)
         {
-            // Reset về trang Menu
-            if (ucOrderHistory != null) ucOrderHistory.Visible = false;
+            ucOrderHistory.Visible = false;
             flpMenu.Visible = true;
             flpCategory.Visible = true;
+            ucBanner.Visible = true;
         }
 
         private void btnHistory_Click(object sender, EventArgs e)
         {
             if (Session.CurrentUser == null) { MessageBox.Show("Vui lòng đăng nhập!"); return; }
 
-            if (ucOrderHistory != null)
-            {
-                ucOrderHistory.Visible = true;
-                ucOrderHistory.LoadHistory();
-                ucOrderHistory.BringToFront();
-            }
+            // Ẩn Menu, Hiện Lịch sử
+            flpMenu.Visible = false;
+            flpCategory.Visible = false;
+            ucBanner.Visible = false;
+
+            ucOrderHistory.Visible = true;
+            ucOrderHistory.LoadHistory();
+            ucOrderHistory.BringToFront();
+        }
+        private void FixHeaderLayout()
+        {
+            int rightMargin = 20;
+            int spacing = 10;
+
+            // EXIT
+            btnExit.Location = new Point(
+                pnlHeader.Width - btnExit.Width - rightMargin,
+                12);
+
+            // CART
+            btnCart.Location = new Point(
+                btnExit.Left - btnCart.Width - spacing,
+                12);
+
+            // LOGIN
+            btnLogin.Location = new Point(
+                btnCart.Left - btnLogin.Width - spacing,
+                12);
+
+            // SEARCH
+            btnSearch.Location = new Point(
+                btnLogin.Left - btnSearch.Width - spacing,
+                12);
+
+            // SEARCH BOX
+            txtSearch.Width = 250;
+            txtSearch.Location = new Point(
+                btnSearch.Left - txtSearch.Width - spacing,
+                18);
         }
     }
 }
