@@ -154,6 +154,12 @@
     <Compile Include="Forms\Auth\RegisterForm.Designer.cs">
       <DependentUpon>RegisterForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormUserProfile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormUserProfile.Designer.cs">
+      <DependentUpon>FormUserProfile.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\POS\PosForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -171,6 +177,18 @@
     </Compile>
     <Compile Include="Forms\POS\UCCart.Designer.cs">
       <DependentUpon>UCCart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UCBanner.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\UCBanner.Designer.cs">
+      <DependentUpon>UCBanner.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UCOrderHistory.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\UCOrderHistory.Designer.cs">
+      <DependentUpon>UCOrderHistory.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\AppTheme.cs" />
     <Compile Include="Models\category.cs">

@@ -3,14 +3,13 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting; // Thư viện biểu đồ
+using System.Windows.Forms.DataVisualization.Charting; // QUAN TRỌNG: Để vẽ biểu đồ
 using SalesProjectApp.Models;
 
 namespace SalesProjectApp.Forms.Admin
 {
     public partial class UCOverview : UserControl
     {
-        // API Bo tròn góc
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
         private static extern IntPtr CreateRoundRectRgn(
             int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse
@@ -21,40 +20,32 @@ namespace SalesProjectApp.Forms.Admin
         public UCOverview()
         {
             InitializeComponent();
-            UIHelper.StyleDataGridView(dgvRecent);
             this.Dock = DockStyle.Fill;
             this.BackColor = Color.WhiteSmoke;
 
-            // 1. Cấu hình Label tiền để không bị che
-            lblC1Val.AutoSize = true;
-            lblC2Val.AutoSize = true;
-            lblC3Val.AutoSize = true;
-            lblC4Val.AutoSize = true;
+            // Config Label tiền không bị che
+            lblC1Val.AutoSize = true; lblC1Val.BringToFront();
+            lblC2Val.AutoSize = true; lblC2Val.BringToFront();
+            lblC3Val.AutoSize = true; lblC3Val.BringToFront();
+            lblC4Val.AutoSize = true; lblC4Val.BringToFront();
 
-            // Đưa lên lớp trên cùng
-            lblC1Val.BringToFront();
-            lblC2Val.BringToFront();
-            lblC3Val.BringToFront();
-            lblC4Val.BringToFront();
-
-            // 2. Hiển thị ngày
             lblDate.Text = "Hôm nay: " + DateTime.Now.ToString("dd/MM/yyyy");
 
-            // 3. Tải dữ liệu
+            // Tải dữ liệu lần đầu
             LoadDashboardData();
 
-            // 4. Sự kiện vẽ lại góc bo khi thay đổi kích thước
+            // --- FIX LỖI BO TRÒN KHI PHÓNG TO ---
             this.Load += (s, e) => RoundCorners();
-            this.Resize += (s, e) => RoundCorners();
+            this.Resize += (s, e) => RoundCorners(); // Cập nhật lại góc bo khi form thay đổi kích thước
+            // ------------------------------------
 
-            // 5. Kích hoạt Timer cập nhật mỗi 30s
             InitDashboardTimer();
         }
 
         private void InitDashboardTimer()
         {
             dashboardTimer = new Timer();
-            dashboardTimer.Interval = 30000; // 30 giây
+            dashboardTimer.Interval = 30000; // 30s refresh 1 lần
             dashboardTimer.Tick += (s, e) => {
                 lblDate.Text = "Hôm nay: " + DateTime.Now.ToString("dd/MM/yyyy");
                 LoadDashboardData();
@@ -62,16 +53,11 @@ namespace SalesProjectApp.Forms.Admin
             dashboardTimer.Start();
         }
 
-        // Hủy Timer khi đóng để tránh lỗi ngầm
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                if (dashboardTimer != null)
-                {
-                    dashboardTimer.Stop();
-                    dashboardTimer.Dispose();
-                }
+                if (dashboardTimer != null) { dashboardTimer.Stop(); dashboardTimer.Dispose(); }
                 if (components != null) components.Dispose();
             }
             base.Dispose(disposing);
@@ -83,7 +69,7 @@ namespace SalesProjectApp.Forms.Admin
             {
                 using (var db = new SalesProjectNetDBEntities())
                 {
-                    // --- PHẦN 1: 4 THẺ CARD ---
+                    // 1. SỐ LIỆU TỔNG QUAN
                     decimal revenue = db.orders.Where(o => o.status == "Completed").Sum(o => (decimal?)o.total_money) ?? 0;
                     int pendingOrders = db.orders.Count(o => o.status == "Pending");
                     int totalProducts = db.products.Count(p => p.is_active == true);
@@ -94,14 +80,14 @@ namespace SalesProjectApp.Forms.Admin
                     lblC3Val.Text = totalProducts.ToString();
                     lblC4Val.Text = totalCustomers.ToString();
 
-                    // --- PHẦN 2: BIỂU ĐỒ DOANH THU (7 NGÀY) ---
+                    // 2. VẼ BIỂU ĐỒ (ĐÃ THÊM VÀO)
                     LoadChartData(db);
 
-                    // --- PHẦN 3: BẢNG ĐƠN HÀNG (TIẾNG VIỆT) ---
+                    // 3. BẢNG ĐƠN HÀNG MỚI NHẤT
                     dgvRecent.Rows.Clear();
                     var recentOrders = db.orders
                         .OrderByDescending(o => o.created_at)
-                        .Take(5) // Lấy 5 đơn để nhường chỗ cho Chart
+                        .Take(5)
                         .Select(o => new
                         {
                             o.id,
@@ -117,7 +103,6 @@ namespace SalesProjectApp.Forms.Admin
                         string moneyStr = item.Total.HasValue ? item.Total.Value.ToString("#,##0") + "đ" : "0đ";
                         string codeStr = $"#ORD{item.id:D3}";
 
-                        // Dịch trạng thái
                         string statusVi = "Chờ xử lý";
                         if (item.status == "Processing") statusVi = "Đang giao";
                         if (item.status == "Completed") statusVi = "Hoàn thành";
@@ -129,40 +114,45 @@ namespace SalesProjectApp.Forms.Admin
             }
             catch (Exception ex)
             {
-                // Console.WriteLine(ex.Message); // Log lỗi nếu cần
+                // --- FIX LỖI SPAM MESSAGEBOX ---
+                // Không hiện MessageBox ở đây vì Timer chạy liên tục. 
+                // Chỉ ghi log ra Console hoặc bỏ qua để app không bị treo.
+                Console.WriteLine("Lỗi Dashboard: " + ex.Message);
             }
         }
 
+        // --- HÀM VẼ BIỂU ĐỒ (MỚI THÊM) ---
         private void LoadChartData(SalesProjectNetDBEntities db)
         {
-            // Xóa dữ liệu cũ trên biểu đồ
+            // Kiểm tra chartRevenue có null không (đề phòng lỗi Designer chưa load kịp)
+            if (chartRevenue == null) return;
+
             chartRevenue.Series["Doanh Thu"].Points.Clear();
 
-            // Lấy mốc 7 ngày trước
             DateTime sevenDaysAgo = DateTime.Today.AddDays(-6);
 
-            // Lấy dữ liệu thô về RAM trước khi Group By (để tránh lỗi EF)
+            // Lấy dữ liệu thô
             var rawData = db.orders
                 .Where(o => o.status == "Completed" && o.created_at >= sevenDaysAgo)
                 .Select(o => new { o.created_at, o.total_money })
                 .ToList();
 
+            // Group theo ngày
             var chartData = rawData
                 .GroupBy(o => o.created_at.Value.Date)
                 .Select(g => new { Date = g.Key, Sum = g.Sum(x => x.total_money) })
                 .ToList();
 
-            // Vòng lặp 7 ngày để ngày nào không bán được cũng hiện số 0
+            // Đổ dữ liệu 7 ngày
             for (int i = 0; i < 7; i++)
             {
                 DateTime d = sevenDaysAgo.AddDays(i);
                 var dayData = chartData.FirstOrDefault(x => x.Date == d);
                 decimal total = dayData != null ? (decimal)dayData.Sum : 0;
 
-                // Thêm điểm vào biểu đồ
                 DataPoint p = new DataPoint();
                 p.SetValueXY(d.ToString("dd/MM"), total);
-                p.ToolTip = total.ToString("#,##0") + "đ"; // Hover chuột hiện tiền
+                p.ToolTip = total.ToString("#,##0") + "đ";
                 chartRevenue.Series["Doanh Thu"].Points.Add(p);
             }
         }

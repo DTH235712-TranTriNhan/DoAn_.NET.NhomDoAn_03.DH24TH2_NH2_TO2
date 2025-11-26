@@ -68,7 +68,7 @@ namespace SalesProjectApp.Forms.Admin
                     cat.code = txtCode.Text.Trim().ToUpper(); // Mã nên viết hoa
 
                     db.SaveChanges();
-                    MessageBox.Show("Lưu thành công!", "Thông báo");
+                    LogHelper.Write("UPDATE CATEGORY", $"Danh mục: {txtName.Text}");
                     this.Close();
                 }
             }
