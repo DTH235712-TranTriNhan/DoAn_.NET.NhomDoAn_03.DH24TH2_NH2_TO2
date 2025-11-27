@@ -1,4 +1,8 @@
-﻿namespace SalesProjectApp.Forms.Auth
+﻿using System.Windows.Forms;
+using System;
+using System.Drawing;
+
+namespace SalesProjectApp.Forms.Auth
 {
     partial class RegisterForm
     {
@@ -7,195 +11,177 @@
 
         private void InitializeComponent()
         {
-            this.pnlLeft = new System.Windows.Forms.Panel();
-            this.lblSlogan2 = new System.Windows.Forms.Label();
-            this.lblSlogan1 = new System.Windows.Forms.Label();
-            this.lblBrand = new System.Windows.Forms.Label();
-            this.pnlRight = new System.Windows.Forms.Panel();
-            this.btnBackToLogin = new System.Windows.Forms.Label();
-            this.btnRegister = new SalesProjectApp.Controls.RJButton();
-            this.pnlLine3 = new System.Windows.Forms.Panel();
-            this.txtConfirm = new System.Windows.Forms.TextBox();
-            this.pnlLine2 = new System.Windows.Forms.Panel();
-            this.txtPass = new System.Windows.Forms.TextBox();
-            this.pnlLine1 = new System.Windows.Forms.Panel();
-            this.txtUser = new System.Windows.Forms.TextBox();
-            this.pnlLine0 = new System.Windows.Forms.Panel();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.lblTitle = new System.Windows.Forms.Label();
-            this.btnClose = new System.Windows.Forms.Label();
+            this.pnlLeft = new Panel();
+            this.lblBrand = new Label();
+            this.lblSlogan1 = new Label();
+            this.lblSlogan2 = new Label();
 
-            this.pnlLeft.SuspendLayout();
-            this.pnlRight.SuspendLayout();
-            this.SuspendLayout();
+            this.pnlRight = new Panel();
+            this.btnClose = new Label();
+            this.lblTitle = new Label();
+            this.txtName = new TextBox();
+            this.pnlLineName = new Panel();
+            this.txtUser = new TextBox();
+            this.pnlLineUser = new Panel();
+            this.txtPass = new TextBox();
+            this.pnlLinePass = new Panel();
+            this.txtConfirm = new TextBox();
+            this.pnlLineConfirm = new Panel();
+            this.btnRegister = new Controls.RJButton();
+            this.btnBackToLogin = new Label();
 
-            // PNL LEFT (Giống Login)
+            // === PNL LEFT ===
             this.pnlLeft.BackColor = System.Drawing.Color.FromArgb(233, 30, 99);
-            this.pnlLeft.Controls.Add(this.lblSlogan2);
-            this.pnlLeft.Controls.Add(this.lblSlogan1);
-            this.pnlLeft.Controls.Add(this.lblBrand);
-            this.pnlLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlLeft.Size = new System.Drawing.Size(350, 550); // Cao hơn chút
+            this.pnlLeft.Dock = DockStyle.Left;
+            this.pnlLeft.Width = 350;
 
-            this.lblBrand.AutoSize = true;
-            this.lblBrand.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold);
-            this.lblBrand.ForeColor = System.Drawing.Color.White;
-            this.lblBrand.Location = new System.Drawing.Point(30, 50);
             this.lblBrand.Text = "SUGAR TOWN";
+            this.lblBrand.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold);
+            this.lblBrand.ForeColor = Color.White;
+            this.lblBrand.Dock = DockStyle.Top;
+            this.lblBrand.Height = 80;
+            this.lblBrand.TextAlign = ContentAlignment.MiddleCenter;
 
-            this.lblSlogan1.AutoSize = true;
-            this.lblSlogan1.Font = new System.Drawing.Font("Segoe UI", 18F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
-            this.lblSlogan1.ForeColor = System.Drawing.Color.White;
-            this.lblSlogan1.Location = new System.Drawing.Point(30, 180);
             this.lblSlogan1.Text = "Thành Viên Mới";
+            this.lblSlogan1.Font = new System.Drawing.Font("Segoe UI", 18F, FontStyle.Italic);
+            this.lblSlogan1.ForeColor = Color.White;
+            this.lblSlogan1.Dock = DockStyle.Top;
+            this.lblSlogan1.Height = 60;
+            this.lblSlogan1.TextAlign = ContentAlignment.MiddleCenter;
 
-            this.lblSlogan2.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.lblSlogan2.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblSlogan2.Location = new System.Drawing.Point(35, 230);
-            this.lblSlogan2.Size = new System.Drawing.Size(280, 60);
             this.lblSlogan2.Text = "Đăng ký ngay để nhận nhiều ưu đãi hấp dẫn!";
+            this.lblSlogan2.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.lblSlogan2.ForeColor = Color.WhiteSmoke;
+            this.lblSlogan2.Dock = DockStyle.Top;
+            this.lblSlogan2.Height = 60;
+            this.lblSlogan2.TextAlign = ContentAlignment.MiddleCenter;
 
-            // PNL RIGHT
-            this.pnlRight.BackColor = System.Drawing.Color.White;
-            this.pnlRight.Controls.Add(this.btnBackToLogin);
-            this.pnlRight.Controls.Add(this.btnRegister);
-            this.pnlRight.Controls.Add(this.pnlLine3);
-            this.pnlRight.Controls.Add(this.txtConfirm);
-            this.pnlRight.Controls.Add(this.pnlLine2);
-            this.pnlRight.Controls.Add(this.txtPass);
-            this.pnlRight.Controls.Add(this.pnlLine1);
-            this.pnlRight.Controls.Add(this.txtUser);
-            this.pnlRight.Controls.Add(this.pnlLine0);
-            this.pnlRight.Controls.Add(this.txtName);
-            this.pnlRight.Controls.Add(this.lblTitle);
-            this.pnlRight.Controls.Add(this.btnClose);
-            this.pnlRight.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlLeft.Controls.Add(lblSlogan2);
+            this.pnlLeft.Controls.Add(lblSlogan1);
+            this.pnlLeft.Controls.Add(lblBrand);
 
-            // Nút Đóng
-            this.btnClose.AutoSize = true;
-            this.btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnClose.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.btnClose.ForeColor = System.Drawing.Color.Gray;
-            this.btnClose.Location = new System.Drawing.Point(410, 10);
+            // === PNL RIGHT ===
+            this.pnlRight.BackColor = Color.White;
+            this.pnlRight.Dock = DockStyle.Fill;
+
             this.btnClose.Text = "✕";
-            this.btnClose.Click += (s, e) => this.Close();
+            this.btnClose.Font = new System.Drawing.Font("Segoe UI", 16F, FontStyle.Bold);
+            this.btnClose.ForeColor = Color.Gray;
+            this.btnClose.Cursor = Cursors.Hand;
+            this.btnClose.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            this.btnClose.Location = new System.Drawing.Point(760, 10);
+            this.btnClose.Click += new EventHandler(this.btnClose_Click);
 
-            // Tiêu đề
-            this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Bold);
-            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(111, 78, 55);
-            this.lblTitle.Location = new System.Drawing.Point(40, 40);
             this.lblTitle.Text = "ĐĂNG KÝ";
+            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 20F, FontStyle.Bold);
+            this.lblTitle.ForeColor = Color.FromArgb(111, 78, 55);
+            this.lblTitle.Location = new System.Drawing.Point(45, 50);
+            this.lblTitle.AutoSize = true;
 
-            // Họ tên
-            this.txtName.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtName.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.txtName.Location = new System.Drawing.Point(45, 110);
-            this.txtName.Size = new System.Drawing.Size(350, 27);
+            int txtWidth = 350;
+            int txtStartY = 120;
+            int txtHeight = 27;
+            int lineHeight = 2;
+            int space = 50;
+
+            // Họ và tên
             this.txtName.Text = "Họ và tên";
-            this.pnlLine0.BackColor = System.Drawing.Color.Silver;
-            this.pnlLine0.Location = new System.Drawing.Point(45, 140);
-            this.pnlLine0.Size = new System.Drawing.Size(350, 2);
-            this.txtName.Enter += (s, e) => { if (txtName.Text == "Họ và tên") { txtName.Text = ""; } };
+            this.txtName.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.txtName.BorderStyle = BorderStyle.None;
+            this.txtName.Location = new System.Drawing.Point(45, txtStartY);
+            this.txtName.Width = txtWidth;
+            this.txtName.Enter += (s, e) => { if (txtName.Text == "Họ và tên") txtName.Text = ""; };
+            this.txtName.Leave += (s, e) => { if (string.IsNullOrWhiteSpace(txtName.Text)) txtName.Text = "Họ và tên"; };
+
+            this.pnlLineName.BackColor = Color.Silver;
+            this.pnlLineName.Location = new System.Drawing.Point(45, txtStartY + txtHeight + 5);
+            this.pnlLineName.Size = new System.Drawing.Size(txtWidth, lineHeight);
 
             // Username
-            this.txtUser.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtUser.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.txtUser.Location = new System.Drawing.Point(45, 170);
-            this.txtUser.Size = new System.Drawing.Size(350, 27);
             this.txtUser.Text = "Tên đăng nhập";
-            this.pnlLine1.BackColor = System.Drawing.Color.Silver;
-            this.pnlLine1.Location = new System.Drawing.Point(45, 200);
-            this.pnlLine1.Size = new System.Drawing.Size(350, 2);
-            this.txtUser.Enter += (s, e) => { if (txtUser.Text == "Tên đăng nhập") { txtUser.Text = ""; } };
+            this.txtUser.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.txtUser.BorderStyle = BorderStyle.None;
+            this.txtUser.Location = new System.Drawing.Point(45, txtStartY + space);
+            this.txtUser.Width = txtWidth;
+            this.txtUser.Enter += (s, e) => { if (txtUser.Text == "Tên đăng nhập") txtUser.Text = ""; };
+            this.txtUser.Leave += (s, e) => { if (string.IsNullOrWhiteSpace(txtUser.Text)) txtUser.Text = "Tên đăng nhập"; };
+
+            this.pnlLineUser.BackColor = Color.Silver;
+            this.pnlLineUser.Location = new System.Drawing.Point(45, txtStartY + space + txtHeight + 5);
+            this.pnlLineUser.Size = new System.Drawing.Size(txtWidth, lineHeight);
 
             // Password
-            this.txtPass.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtPass.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.txtPass.Location = new System.Drawing.Point(45, 230);
-            this.txtPass.Size = new System.Drawing.Size(350, 27);
             this.txtPass.Text = "Mật khẩu";
-            this.pnlLine2.BackColor = System.Drawing.Color.Silver;
-            this.pnlLine2.Location = new System.Drawing.Point(45, 260);
-            this.pnlLine2.Size = new System.Drawing.Size(350, 2);
+            this.txtPass.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.txtPass.BorderStyle = BorderStyle.None;
+            this.txtPass.Location = new System.Drawing.Point(45, txtStartY + space * 2);
+            this.txtPass.Width = txtWidth;
             this.txtPass.Enter += (s, e) => { if (txtPass.Text == "Mật khẩu") { txtPass.Text = ""; txtPass.UseSystemPasswordChar = true; } };
+            this.txtPass.Leave += (s, e) => { if (string.IsNullOrWhiteSpace(txtPass.Text)) { txtPass.UseSystemPasswordChar = false; txtPass.Text = "Mật khẩu"; } };
 
-            // Confirm Pass
-            this.txtConfirm.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtConfirm.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.txtConfirm.Location = new System.Drawing.Point(45, 290);
-            this.txtConfirm.Size = new System.Drawing.Size(350, 27);
+            this.pnlLinePass.BackColor = Color.Silver;
+            this.pnlLinePass.Location = new System.Drawing.Point(45, txtStartY + space * 2 + txtHeight + 5);
+            this.pnlLinePass.Size = new System.Drawing.Size(txtWidth, lineHeight);
+
+            // Confirm Password
             this.txtConfirm.Text = "Nhập lại mật khẩu";
-            this.pnlLine3.BackColor = System.Drawing.Color.Silver;
-            this.pnlLine3.Location = new System.Drawing.Point(45, 320);
-            this.pnlLine3.Size = new System.Drawing.Size(350, 2);
+            this.txtConfirm.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.txtConfirm.BorderStyle = BorderStyle.None;
+            this.txtConfirm.Location = new System.Drawing.Point(45, txtStartY + space * 3);
+            this.txtConfirm.Width = txtWidth;
             this.txtConfirm.Enter += (s, e) => { if (txtConfirm.Text == "Nhập lại mật khẩu") { txtConfirm.Text = ""; txtConfirm.UseSystemPasswordChar = true; } };
+            this.txtConfirm.Leave += (s, e) => { if (string.IsNullOrWhiteSpace(txtConfirm.Text)) { txtConfirm.UseSystemPasswordChar = false; txtConfirm.Text = "Nhập lại mật khẩu"; } };
+
+            this.pnlLineConfirm.BackColor = Color.Silver;
+            this.pnlLineConfirm.Location = new System.Drawing.Point(45, txtStartY + space * 3 + txtHeight + 5);
+            this.pnlLineConfirm.Size = new System.Drawing.Size(txtWidth, lineHeight);
 
             // Button Register
-            this.btnRegister.BackColor = System.Drawing.Color.FromArgb(233, 30, 99);
-            this.btnRegister.BackgroundColor = System.Drawing.Color.FromArgb(233, 30, 99);
-            this.btnRegister.BorderColor = System.Drawing.Color.PaleVioletRed;
-            this.btnRegister.BorderRadius = 25;
-            this.btnRegister.BorderSize = 0;
-            this.btnRegister.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnRegister.FlatAppearance.BorderSize = 0;
-            this.btnRegister.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRegister.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.btnRegister.ForeColor = System.Drawing.Color.White;
-            this.btnRegister.Location = new System.Drawing.Point(45, 370);
-            this.btnRegister.Name = "btnRegister";
-            this.btnRegister.Size = new System.Drawing.Size(350, 50);
             this.btnRegister.Text = "ĐĂNG KÝ";
-            this.btnRegister.TextColor = System.Drawing.Color.White;
-            this.btnRegister.UseVisualStyleBackColor = false;
-            this.btnRegister.Click += new System.EventHandler(this.btnRegister_Click);
+            this.btnRegister.Size = new System.Drawing.Size(txtWidth, 50);
+            this.btnRegister.Location = new System.Drawing.Point(45, txtStartY + space * 4);
+            this.btnRegister.BackColor = Color.FromArgb(233, 30, 99);
+            this.btnRegister.ForeColor = Color.White;
+            this.btnRegister.FlatStyle = FlatStyle.Flat;
+            this.btnRegister.Click += new EventHandler(this.btnRegister_Click);
 
-            // Back Link
-            this.btnBackToLogin.AutoSize = true;
-            this.btnBackToLogin.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnBackToLogin.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Underline);
-            this.btnBackToLogin.ForeColor = System.Drawing.Color.FromArgb(111, 78, 55);
-            this.btnBackToLogin.Location = new System.Drawing.Point(115, 440);
+            // Back to Login
             this.btnBackToLogin.Text = "Đã có tài khoản? Đăng nhập ngay";
-            this.btnBackToLogin.Click += (s, e) => this.Close(); // Đóng form đăng ký sẽ lộ ra form login bên dưới
+            this.btnBackToLogin.Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Underline);
+            this.btnBackToLogin.ForeColor = Color.FromArgb(111, 78, 55);
+            this.btnBackToLogin.Location = new System.Drawing.Point(90, txtStartY + space * 5 + 10);
+            this.btnBackToLogin.AutoSize = true;
+            this.btnBackToLogin.Cursor = Cursors.Hand;
+            this.btnBackToLogin.Click += new EventHandler(this.btnBackToLogin_Click);
 
-            // Main Form
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.pnlRight.Controls.Add(btnClose);
+            this.pnlRight.Controls.Add(lblTitle);
+            this.pnlRight.Controls.Add(txtName);
+            this.pnlRight.Controls.Add(pnlLineName);
+            this.pnlRight.Controls.Add(txtUser);
+            this.pnlRight.Controls.Add(pnlLineUser);
+            this.pnlRight.Controls.Add(txtPass);
+            this.pnlRight.Controls.Add(pnlLinePass);
+            this.pnlRight.Controls.Add(txtConfirm);
+            this.pnlRight.Controls.Add(pnlLineConfirm);
+            this.pnlRight.Controls.Add(btnRegister);
+            this.pnlRight.Controls.Add(btnBackToLogin);
+
+            // === Main Form ===
             this.ClientSize = new System.Drawing.Size(800, 550);
-            this.Controls.Add(this.pnlRight);
-            this.Controls.Add(this.pnlLeft);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Controls.Add(pnlRight);
+            this.Controls.Add(pnlLeft);
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = true;
+            this.StartPosition = FormStartPosition.CenterScreen;
             this.Text = "Register";
-            this.pnlLeft.ResumeLayout(false);
-            this.pnlLeft.PerformLayout();
-            this.pnlRight.ResumeLayout(false);
-            this.pnlRight.PerformLayout();
-            this.ResumeLayout(false);
         }
 
-        private System.Windows.Forms.Panel pnlLeft;
-        private System.Windows.Forms.Panel pnlRight;
-        private System.Windows.Forms.Label lblBrand;
-        private System.Windows.Forms.Label lblSlogan1;
-        private System.Windows.Forms.Label lblSlogan2;
-        private System.Windows.Forms.Label lblTitle;
-        private System.Windows.Forms.Label btnClose;
-
-        private System.Windows.Forms.TextBox txtName;
-        private System.Windows.Forms.Panel pnlLine0;
-
-        private System.Windows.Forms.TextBox txtUser;
-        private System.Windows.Forms.Panel pnlLine1;
-
-        private System.Windows.Forms.TextBox txtPass;
-        private System.Windows.Forms.Panel pnlLine2;
-
-        private System.Windows.Forms.TextBox txtConfirm;
-        private System.Windows.Forms.Panel pnlLine3;
-
-        private SalesProjectApp.Controls.RJButton btnRegister;
-        private System.Windows.Forms.Label btnBackToLogin;
+        private Panel pnlLeft, pnlRight;
+        private Label lblBrand, lblSlogan1, lblSlogan2, lblTitle, btnClose, btnBackToLogin;
+        private TextBox txtName, txtUser, txtPass, txtConfirm;
+        private Panel pnlLineName, pnlLineUser, pnlLinePass, pnlLineConfirm;
+        private Controls.RJButton btnRegister;
     }
 }

@@ -7,26 +7,30 @@ namespace SalesProjectApp.Forms.Auth
 {
     public partial class RegisterForm : Form
     {
-        public RegisterForm()
+        private Form loginForm;
+
+        public RegisterForm(Form loginForm = null)
         {
             InitializeComponent();
             this.AcceptButton = btnRegister;
+            this.loginForm = loginForm;
         }
 
         private void btnRegister_Click(object sender, EventArgs e)
         {
             string name = txtName.Text.Trim();
-            string u = txtUser.Text.Trim();
-            string p = txtPass.Text.Trim();
-            string pc = txtConfirm.Text.Trim();
+            string username = txtUser.Text.Trim();
+            string password = txtPass.Text.Trim();
+            string confirm = txtConfirm.Text.Trim();
 
-            // Validate
-            if (name == "Họ và tên" || u == "Tên đăng nhập" || p == "Mật khẩu" || string.IsNullOrEmpty(u) || string.IsNullOrEmpty(p))
+            if (name == "Họ và tên" || username == "Tên đăng nhập" ||
+                password == "Mật khẩu" || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Cảnh báo");
                 return;
             }
-            if (p != pc)
+
+            if (password != confirm)
             {
                 MessageBox.Show("Mật khẩu nhập lại không khớp!", "Lỗi");
                 return;
@@ -34,7 +38,7 @@ namespace SalesProjectApp.Forms.Auth
 
             using (var db = new SalesProjectNetDBEntities())
             {
-                if (db.users.Any(x => x.username == u))
+                if (db.users.Any(u => u.username == username))
                 {
                     MessageBox.Show("Tên đăng nhập đã tồn tại!", "Lỗi");
                     return;
@@ -42,19 +46,31 @@ namespace SalesProjectApp.Forms.Auth
 
                 var newUser = new user
                 {
-                    username = u,
-                    password = p,
                     full_name = name,
+                    username = username,
+                    password = password,
                     role = "user",
                     created_at = DateTime.Now
                 };
 
                 db.users.Add(newUser);
                 db.SaveChanges();
-
-                MessageBox.Show("Đăng ký thành công! Vui lòng đăng nhập.", "Chúc mừng");
-                this.Close(); // Đóng form này để quay lại Login
             }
+
+            MessageBox.Show("Đăng ký thành công! Vui lòng đăng nhập.", "Thành công");
+            this.Close();
+        }
+
+        private void btnBackToLogin_Click(object sender, EventArgs e)
+        {
+            this.Close(); // Đóng register
+            loginForm?.Show(); // Hiện lại login nếu truyền
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            loginForm?.Show();
         }
     }
 }

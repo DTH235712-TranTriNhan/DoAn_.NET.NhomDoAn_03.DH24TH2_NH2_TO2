@@ -18,7 +18,7 @@ namespace SalesProjectApp.Forms.Auth
             string u = txtUser.Text.Trim();
             string p = txtPass.Text.Trim();
 
-            if (u == "Tên đăng nhập" || p == "Mật khẩu" || string.IsNullOrEmpty(u))
+            if (u == "Tên đăng nhập" || p == "Mật khẩu" || string.IsNullOrEmpty(u) || string.IsNullOrEmpty(p))
             {
                 MessageBox.Show("Vui lòng nhập tài khoản và mật khẩu!", "Thông báo");
                 return;
@@ -33,7 +33,7 @@ namespace SalesProjectApp.Forms.Auth
                     Session.CurrentUser = user;
                     LogHelper.Write("LOGIN", $"User {u} đã đăng nhập.");
 
-                    this.DialogResult = DialogResult.OK; // Báo cho PosForm biết là OK
+                    this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
                 else
@@ -43,11 +43,17 @@ namespace SalesProjectApp.Forms.Auth
             }
         }
 
-        // --- CHUYỂN SANG FORM ĐĂNG KÝ ---
         private void btnGoToRegister_Click(object sender, EventArgs e)
         {
-            RegisterForm frm = new RegisterForm();
-            frm.ShowDialog(); // Hiện form đăng ký (Modal)
+            this.Hide(); // Ẩn Login
+            RegisterForm reg = new RegisterForm();
+            reg.ShowDialog();
+            this.Show(); // Hiện lại sau khi đóng Register
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
