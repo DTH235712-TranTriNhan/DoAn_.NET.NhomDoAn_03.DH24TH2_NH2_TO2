@@ -238,18 +238,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Repositories\ProductRepository.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Repositories\ProductRepository.Designer.cs">
-      <DependentUpon>ProductRepository.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Repositories\UserRepository.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Repositories\UserRepository.Designer.cs">
-      <DependentUpon>UserRepository.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\RJButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -258,18 +246,6 @@
     </Compile>
     <Compile Include="Controls\RJPictureBox.Designer.cs">
       <DependentUpon>RJPictureBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Services\AuthService.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Services\AuthService.Designer.cs">
-      <DependentUpon>AuthService.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Services\ProductService.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Services\ProductService.Designer.cs">
-      <DependentUpon>ProductService.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Forms\Admin\UCCustomer.resx">
       <DependentUpon>UCCustomer.cs</DependentUpon>
@@ -329,16 +305,11 @@
       <DependentUpon>SalesModel.edmx</DependentUpon>
       <LastGenOutput>SalesModel.cs</LastGenOutput>
     </Content>
-    <None Include="Resources\XemPW.png" />
-    <None Include="Resources\AnPW.png" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Forms\Reports\" />
-    <Folder Include="Utils\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
