@@ -35,6 +35,7 @@ namespace SalesProjectApp.Forms.Admin
                         int idx = dgvCategory.Rows.Add(item.id, item.name, item.code, "...");
                         dgvCategory.Rows[idx].Tag = item.id; // Giấu ID vào Tag
                     }
+                    GlobalEvents.RaiseCategoryUpdated();
                 }
             }
             catch (Exception ex) { MessageBox.Show("Lỗi: " + ex.Message); }

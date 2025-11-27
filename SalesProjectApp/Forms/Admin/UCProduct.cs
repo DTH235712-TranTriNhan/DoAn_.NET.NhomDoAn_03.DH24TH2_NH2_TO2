@@ -94,9 +94,8 @@ namespace SalesProjectApp.Forms.Admin
                     dgvProduct.Rows.Clear();
                     foreach (var item in listProducts)
                     {
-                        Image imgDisplay = (!string.IsNullOrEmpty(item.image) && File.Exists(item.image))
-                            ? Image.FromFile(item.image)
-                            : SystemIcons.Shield.ToBitmap();
+                        // Sử dụng hàm tiện ích mới
+                        Image imgDisplay = LoadImageFromFile(item.image);
 
                         string priceStr = item.price.ToString("#,##0") + "đ";
 
@@ -166,6 +165,22 @@ namespace SalesProjectApp.Forms.Admin
                     "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (dr == DialogResult.Yes) DeleteProduct(_selectedId);
+            }
+        }
+
+        private Image LoadImageFromFile(string path)
+        {
+            if (string.IsNullOrEmpty(path) || !File.Exists(path))
+            {
+                return SystemIcons.Shield.ToBitmap(); // Ảnh mặc định
+            }
+
+            // Sao chép dữ liệu ảnh vào MemoryStream
+            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                MemoryStream ms = new MemoryStream();
+                fs.CopyTo(ms);
+                return Image.FromStream(ms); // Image.FromStream không khóa file
             }
         }
 

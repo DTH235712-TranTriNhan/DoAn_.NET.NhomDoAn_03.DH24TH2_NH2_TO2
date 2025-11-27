@@ -50,8 +50,11 @@ namespace SalesProjectApp.Forms
         public PosForm()
         {
             InitializeComponent();
-            this.FormBorderStyle = FormBorderStyle.None;
+            // this.FormBorderStyle = FormBorderStyle.None;
+            // this.WindowState = FormWindowState.Maximized;
+
             this.WindowState = FormWindowState.Maximized;
+            this.FormBorderStyle = FormBorderStyle.Sizable;
 
             // Cấu hình giao diện ban đầu
             pnlRight.Visible = false; // Ẩn giỏ hàng
@@ -78,6 +81,18 @@ namespace SalesProjectApp.Forms
 
             // Sự kiện Resize để tính lại cột sản phẩm khi phóng to/thu nhỏ
             this.Resize += (s, e) => FixHeaderLayout();
+
+            GlobalEvents.OnCategoryUpdated += (s, e) =>
+            {
+                // Kiểm tra nếu Form chưa bị hủy thì mới chạy (tránh lỗi khi đóng app)
+                if (!this.IsDisposed && this.Visible)
+                {
+                    // Dùng Invoke để đảm bảo chạy trên luồng giao diện chính
+                    this.Invoke(new Action(() => {
+                        LoadCategoryTabs();
+                    }));
+                }
+            };
 
             this.Load += new EventHandler(PosForm_Load);
         }
@@ -282,7 +297,7 @@ namespace SalesProjectApp.Forms
                 ProductDetailForm frm = new ProductDetailForm(p.Name, p.Price, p.Img, p.Description);
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
-                    ucCart.AddToCart(p.Name, p.Price, frm.SelectedQty, frm.Note);
+                    ucCart.AddToCart(p.Name, p.Price, frm.SelectedQty, frm.Note, p.Img);
                     UpdateCartCount(frm.SelectedQty);
                 }
             };
